@@ -2,8 +2,9 @@
 #include "Loader.hpp"
 
 #include <tiny_obj_loader.h>
+#include <stb_image.h>
 
-void Loader::Load(const std::string& path, std::vector<Vertex>& vertices, std::vector<unsigned>& indices)
+void Loader::LoadModel(const std::string& path, std::vector<Vertex>& vertices, std::vector<unsigned>& indices)
 {
 		tinyobj::ObjReaderConfig reader_config;
 		reader_config.vertex_color = false;
@@ -15,7 +16,7 @@ void Loader::Load(const std::string& path, std::vector<Vertex>& vertices, std::v
 		tinyobj::ObjReader reader;
 
 		if (!reader.ParseFromFile(model_path.string(), reader_config))
-			[[unlikely]] throw std::exception("Loading model failed");
+			[[unlikely]] throw std::exception(std::string("Failed to load model" + path).c_str());
 		
 		auto& attrib = reader.GetAttrib();
 		auto& shapes = reader.GetShapes();
@@ -68,3 +69,13 @@ void Loader::Load(const std::string& path, std::vector<Vertex>& vertices, std::v
 	        }
 	    }
 	}
+
+void Loader::LoadImage(const std::string& path, unsigned char*& image_data, int& width, int& height, int& channels)
+{
+	const auto texture_path = std::filesystem::current_path() / "assets/mtl" / path;
+
+	if (!stbi_info(texture_path.string().c_str(), &width, &height, &channels))
+		[[unlikely]] throw std::exception(std::string(path + " is not a valid image file").c_str());
+
+	image_data = stbi_load(texture_path.string().c_str(), &width, &height, &channels, 0);
+}

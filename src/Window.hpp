@@ -1,5 +1,4 @@
 #pragma once
-#include <GLFW/glfw3.h>
 
 class Window
 {
@@ -40,7 +39,6 @@ public:
 private:
 	static void FramebufferResizeCallback(GLFWwindow* window, int width, int height);
 	static void KeyPressedCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-	static void CursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
 	[[noreturn]] static void ErrorCallback(int error, const char* description);
 
 	void Init();

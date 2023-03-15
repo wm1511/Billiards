@@ -1,5 +1,4 @@
 #pragma once
-#include <glm/glm.hpp>
 
 class Input
 {
@@ -25,6 +24,7 @@ public:
 
 	static int GetPressedKey()
 	{
+		GLFWwindow* window = glfwGetCurrentContext();
 		return pressed_key_code_;
 	}
 

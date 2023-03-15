@@ -34,6 +34,7 @@
     </ClCompile>
     <ClCompile Include="src\Loader.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\stdafx.cpp">
@@ -42,7 +43,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\VertexIndexBuffer.cpp" />
+    <ClCompile Include="src\Table.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Window.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
@@ -52,16 +55,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.hpp" />
+    <ClInclude Include="src\Config.hpp" />
     <ClInclude Include="src\Input.hpp" />
     <ClInclude Include="src\Loader.hpp" />
     <ClInclude Include="src\App.hpp" />
     <ClInclude Include="src\glad\include\glad\gl.h" />
     <ClInclude Include="src\glad\include\KHR\khrplatform.h" />
+    <ClInclude Include="src\Material.hpp" />
+    <ClInclude Include="src\Object.hpp" />
     <ClInclude Include="src\Renderer.hpp" />
     <ClInclude Include="src\Shader.hpp" />
     <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\Table.hpp" />
+    <ClInclude Include="src\Texture.hpp" />
     <ClInclude Include="src\Vertex.hpp" />
-    <ClInclude Include="src\VertexIndexBuffer.hpp" />
+    <ClInclude Include="src\Mesh.hpp" />
     <ClInclude Include="src\Window.hpp" />
   </ItemGroup>
   <ItemGroup>

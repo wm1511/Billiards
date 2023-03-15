@@ -19,12 +19,12 @@ std::string Shader::LoadShaderSource(const std::string& path) const
 {
 	std::ifstream file(path, std::ios::in | std::ios::binary);
     const size_t size = std::filesystem::file_size(path);
-    std::string urce(size, '\0');
+    std::string source(size, '\0');
 
-    file.read(urce.data(), static_cast<long long>(size));
+    file.read(source.data(), static_cast<long long>(size));
 	file.close();
 	
-	return urce;
+	return source;
 }
 
 GLuint Shader::LoadShader(const unsigned type, const std::string& path) const
@@ -98,4 +98,10 @@ void Shader::SetFloat(const float s, const std::string& name) const
 {
 	const auto my_loc = glGetUniformLocation(id_, name.c_str());
 	glUniform1f(my_loc, s);
+}
+
+void Shader::SetInt(const int n, const std::string& name) const
+{
+	const auto my_loc = glGetUniformLocation(id_, name.c_str());
+	glUniform1i(my_loc, n);
 }

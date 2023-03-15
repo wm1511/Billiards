@@ -1,19 +1,14 @@
 #include "stdafx.h"
 #include "App.hpp"
-#include "Loader.hpp"
 
 App::App() :
 	window_(std::make_unique<Window>(1920, 1080, "Billiards")),
-	camera_(std::make_shared<Camera>(90.0f, 0.001f, 1000.0f, 100.0f, 1.0f)),
-	shader_(std::make_shared<Shader>("vertex.glsl", "fragment.glsl"))
+	camera_(std::make_shared<Camera>(90.0f, 0.001f, 1000.0f, 0.1f, 0.001f)),
+	shader_(std::make_shared<Shader>("vertex.glsl", "fragment.glsl")),
+	table_(std::make_shared<Table>())
 {
-	auto vertices = std::vector<Vertex>();
-	auto indices = std::vector<unsigned>();
-
-	Loader::Load("test.obj", vertices, indices);
-
-	model_ = std::make_shared<VertexIndexBuffer>(vertices, indices);
-
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_MULTISAMPLE); 
 	glViewport(0, 0, window_->GetWidth(), window_->GetHeight());
 }
 
@@ -34,13 +29,14 @@ void App::Run()
 
 void App::OnUpdate()
 {
-	const auto start = std::chrono::high_resolution_clock::now();
+	const auto start = glfwGetTime();
 
 	camera_->UpdateView(frame_time_);
 	Renderer::Update(shader_, camera_);
-	Renderer::Render(shader_, model_);
+	Renderer::Update(shader_, table_);
+	Renderer::Render(shader_, table_);
 
-	frame_time_ = std::chrono::duration<float>(std::chrono::high_resolution_clock::now() - start).count();
+	frame_time_ = static_cast<float>(glfwGetTime() - start);
 }
 
 void App::OnResize() const

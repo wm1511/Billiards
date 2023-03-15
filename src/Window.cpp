@@ -25,25 +25,11 @@ void Window::KeyPressedCallback(GLFWwindow* window, const int key, int, const in
 {
 	if (action == GLFW_PRESS)
 	{
-		if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
-			Input::SetPressedKey(key);
-
 		if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED && key == GLFW_KEY_ESCAPE)
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		else if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL && key == GLFW_KEY_ENTER)
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
-	else if (action == GLFW_RELEASE)
-	{
-		if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
-			Input::SetPressedKey(GLFW_KEY_UNKNOWN);
-	}
-}
-
-void Window::CursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
-{
-	if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
-		Input::SetCursorPosition(xpos, ypos);
 }
 
 void Window::ErrorCallback(const int error, const char* description)
@@ -58,6 +44,7 @@ void Window::Init()
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 #ifdef _DEBUG
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
@@ -78,5 +65,4 @@ void Window::Init()
 	glfwSetWindowUserPointer(window_, this);
 	glfwSetWindowSizeCallback(window_, FramebufferResizeCallback);
 	glfwSetKeyCallback(window_, KeyPressedCallback);
-	glfwSetCursorPosCallback(window_, CursorPositionCallback);
 }
