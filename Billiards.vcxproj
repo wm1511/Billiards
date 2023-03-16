@@ -19,62 +19,54 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\App.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\glad\src\gl.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Loader.cpp" />
+    <ClCompile Include="src\interface\Camera.cpp" />
+    <ClCompile Include="src\interface\Window.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Object.cpp" />
-    <ClCompile Include="src\Renderer.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\objects\Ball.cpp" />
+    <ClCompile Include="src\objects\Cue.cpp" />
+    <ClCompile Include="src\objects\Object.cpp" />
+    <ClCompile Include="src\objects\Table.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Table.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
-    <ClCompile Include="src\Mesh.cpp" />
-    <ClCompile Include="src\Window.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="src\wrapper\App.cpp" />
+    <ClCompile Include="src\wrapper\Loader.cpp" />
+    <ClCompile Include="src\wrapper\Material.cpp" />
+    <ClCompile Include="src\wrapper\Mesh.cpp" />
+    <ClCompile Include="src\wrapper\Shader.cpp" />
+    <ClCompile Include="src\wrapper\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Camera.hpp" />
     <ClInclude Include="src\Config.hpp" />
-    <ClInclude Include="src\Input.hpp" />
-    <ClInclude Include="src\Loader.hpp" />
-    <ClInclude Include="src\App.hpp" />
     <ClInclude Include="src\glad\include\glad\gl.h" />
     <ClInclude Include="src\glad\include\KHR\khrplatform.h" />
-    <ClInclude Include="src\Material.hpp" />
-    <ClInclude Include="src\Object.hpp" />
-    <ClInclude Include="src\Renderer.hpp" />
-    <ClInclude Include="src\Shader.hpp" />
+    <ClInclude Include="src\interface\Camera.hpp" />
+    <ClInclude Include="src\interface\Window.hpp" />
+    <ClInclude Include="src\objects\Ball.hpp" />
+    <ClInclude Include="src\objects\Cue.hpp" />
+    <ClInclude Include="src\objects\Object.hpp" />
+    <ClInclude Include="src\objects\Table.hpp" />
     <ClInclude Include="src\stdafx.h" />
-    <ClInclude Include="src\Table.hpp" />
-    <ClInclude Include="src\Texture.hpp" />
-    <ClInclude Include="src\Vertex.hpp" />
-    <ClInclude Include="src\Mesh.hpp" />
-    <ClInclude Include="src\Window.hpp" />
+    <ClInclude Include="src\wrapper\App.hpp" />
+    <ClInclude Include="src\wrapper\Loader.hpp" />
+    <ClInclude Include="src\wrapper\Material.hpp" />
+    <ClInclude Include="src\wrapper\Mesh.hpp" />
+    <ClInclude Include="src\wrapper\Shader.hpp" />
+    <ClInclude Include="src\wrapper\Texture.hpp" />
+    <ClInclude Include="src\wrapper\Vertex.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\shaders\fragment.glsl" />
-    <None Include="src\shaders\vertex.glsl" />
+    <None Include="src\shaders\shader.frag" />
+    <None Include="src\shaders\shader.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
