@@ -13,7 +13,7 @@ struct Material
 	float roughness{0.0f};
 	glm::vec3 diffuse{0.0f};
 
-	std::unique_ptr<Texture> diffuse_texture = nullptr;
-	std::unique_ptr<Texture> roughness_texture = nullptr;
-	std::unique_ptr<Texture> normal_texture = nullptr;
+	std::shared_ptr<Texture> diffuse_texture = nullptr;
+	std::shared_ptr<Texture> roughness_texture = nullptr;
+	std::shared_ptr<Texture> normal_texture = nullptr;
 };

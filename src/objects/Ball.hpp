@@ -4,7 +4,8 @@
 class Ball : public Object
 {
 public:
-	Ball(int number);
+	Ball();
+	explicit Ball(int number);
 
 private:
 

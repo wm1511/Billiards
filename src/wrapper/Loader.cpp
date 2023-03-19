@@ -3,11 +3,6 @@
 
 #include <stb_image.h>
 
-glm::vec3 MapArrayToVec3(const float array[3])
-{
-	return {array[0], array[1], array[2]};
-}
-
 void Loader::LoadModel(const std::string& path, std::vector<std::shared_ptr<Mesh>>& meshes, std::vector<std::shared_ptr<Material>>& materials)
 {
 		tinyobj::ObjReaderConfig reader_config;
@@ -20,7 +15,7 @@ void Loader::LoadModel(const std::string& path, std::vector<std::shared_ptr<Mesh
 		tinyobj::ObjReader reader;
 
 		if (!reader.ParseFromFile(model_path.string(), reader_config))
-			[[unlikely]] throw std::exception(std::string("Failed to load model" + path).c_str());
+			[[unlikely]] throw std::exception(std::string("Failed to load model " + path).c_str());
 
 		auto& temp_materials = reader.GetMaterials();
 		auto& temp_attrib = reader.GetAttrib();
@@ -33,31 +28,32 @@ void Loader::LoadModel(const std::string& path, std::vector<std::shared_ptr<Mesh
 		LoadMeshes(meshes, temp_shapes, temp_attrib);
 }
 
-void Loader::LoadImage(const std::string& path, unsigned char*& image_data, int& width, int& height, int& channels)
+std::shared_ptr<Texture> Loader::LoadTexture(const std::string& path)
 {
-	const auto texture_path = std::filesystem::current_path() / "assets/mtl" / path;
+	if (path.empty())
+		return nullptr;
+	
+	if (unique_textures_.contains(path))
+		return unique_textures_[path];
 
-	if (!stbi_info(texture_path.string().c_str(), &width, &height, &channels))
-		[[unlikely]] throw std::exception(std::string(path + " is not a valid image file").c_str());
-
-	image_data = stbi_load(texture_path.string().c_str(), &width, &height, &channels, 0);
+	const auto texture = std::make_shared<Texture>(path);
+	unique_textures_.insert({ path, texture });
+	return texture;
 }
 
 void Loader::LoadMaterials(std::vector<std::shared_ptr<Material>>& materials, const std::vector<tinyobj::material_t>& temp_materials)
 {
 	for (const auto& material : temp_materials)
 	{
-		auto diffuse = !material.diffuse_texname.empty() ? std::make_unique<Texture>(material.diffuse_texname) : nullptr;
-		auto roughness = !material.roughness_texname.empty() ? std::make_unique<Texture>(material.roughness_texname) : nullptr;
-		auto normal = !material.normal_texname.empty() ? std::make_unique<Texture>(material.normal_texname) : nullptr;
-
-		materials.push_back(std::make_shared<Material>(
+		materials.push_back(std::make_shared<Material>
+		(
 			material.metallic,
 			material.roughness,
-			MapArrayToVec3(material.diffuse),
-			std::move(diffuse),
-			std::move(roughness),
-			std::move(normal)));
+			glm::vec3{material.diffuse[0], material.diffuse[1], material.diffuse[2]},
+			LoadTexture(material.diffuse_texname),
+			LoadTexture(material.roughness_texname),
+			LoadTexture(material.normal_texname)
+		));
 	}
 }
 
@@ -115,4 +111,14 @@ void Loader::LoadMeshes(std::vector<std::shared_ptr<Mesh>>& meshes, const std::v
 
 		meshes.push_back(std::make_shared<Mesh>(vertices, indices, shape.mesh.material_ids[0]));
 	}
+}
+
+void Loader::LoadImage(const std::string& path, unsigned char*& image_data, int& width, int& height, int& channels)
+{
+	const auto texture_path = std::filesystem::current_path() / "assets/mtl" / path;
+
+	if (!stbi_info(texture_path.string().c_str(), &width, &height, &channels))
+		[[unlikely]] throw std::exception(std::string(path + " is not a valid image file").c_str());
+
+	image_data = stbi_load(texture_path.string().c_str(), &width, &height, &channels, 0);
 }
