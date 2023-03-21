@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Object.hpp"
-#include "../wrapper/Loader.hpp"
+#include "../core/Loader.hpp"
 
 Object::Object(const std::string& path)
 {

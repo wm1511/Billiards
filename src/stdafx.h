@@ -7,6 +7,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 #include <memory>
 #include <string>
@@ -14,5 +16,6 @@
 #include <iostream>
 #include <stdexcept>
 #include <filesystem>
+#include <map>
 #include <unordered_map>
 #include <fstream>

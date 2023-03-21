@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\objects\World.cpp" />
+    <ClCompile Include="src\interface\TextRenderer.cpp" />
     <ClCompile Include="src\glad\src\gl.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -38,15 +40,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\wrapper\App.cpp" />
-    <ClCompile Include="src\wrapper\Loader.cpp" />
-    <ClCompile Include="src\wrapper\Material.cpp" />
-    <ClCompile Include="src\wrapper\Mesh.cpp" />
-    <ClCompile Include="src\wrapper\Shader.cpp" />
-    <ClCompile Include="src\wrapper\Texture.cpp" />
+    <ClCompile Include="src\core\App.cpp" />
+    <ClCompile Include="src\core\Loader.cpp" />
+    <ClCompile Include="src\core\Material.cpp" />
+    <ClCompile Include="src\core\Mesh.cpp" />
+    <ClCompile Include="src\core\Shader.cpp" />
+    <ClCompile Include="src\core\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Config.hpp" />
+    <ClInclude Include="src\objects\Hole.hpp" />
+    <ClInclude Include="src\objects\World.hpp" />
+    <ClInclude Include="src\interface\TextRenderer.hpp" />
     <ClInclude Include="src\glad\include\glad\gl.h" />
     <ClInclude Include="src\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="src\interface\Camera.hpp" />
@@ -56,17 +61,19 @@
     <ClInclude Include="src\objects\Object.hpp" />
     <ClInclude Include="src\objects\Table.hpp" />
     <ClInclude Include="src\stdafx.h" />
-    <ClInclude Include="src\wrapper\App.hpp" />
-    <ClInclude Include="src\wrapper\Loader.hpp" />
-    <ClInclude Include="src\wrapper\Material.hpp" />
-    <ClInclude Include="src\wrapper\Mesh.hpp" />
-    <ClInclude Include="src\wrapper\Shader.hpp" />
-    <ClInclude Include="src\wrapper\Texture.hpp" />
-    <ClInclude Include="src\wrapper\Vertex.hpp" />
+    <ClInclude Include="src\core\App.hpp" />
+    <ClInclude Include="src\core\Loader.hpp" />
+    <ClInclude Include="src\core\Material.hpp" />
+    <ClInclude Include="src\core\Mesh.hpp" />
+    <ClInclude Include="src\core\Shader.hpp" />
+    <ClInclude Include="src\core\Texture.hpp" />
+    <ClInclude Include="src\core\Vertex.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\shader.frag" />
     <None Include="src\shaders\shader.vert" />
+    <None Include="src\shaders\text.frag" />
+    <None Include="src\shaders\text.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -133,8 +140,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)src\GLFW\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)src\include\GLFW\lib-vc2022\glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)src\include\GLFW\lib-vc2022\glfw3.lib;$(SolutionDir)src\include\freetype\libs\freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\wikto\source\Billiards\src\include\freetype\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -154,8 +161,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)src\GLFW\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)src\include\GLFW\lib-vc2022\glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)src\include\GLFW\lib-vc2022\glfw3.lib;$(SolutionDir)src\include\freetype\libs\freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\wikto\source\Billiards\src\include\freetype\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -171,8 +178,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)src\GLFW\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)src\include\GLFW\lib-vc2022\glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)src\include\GLFW\lib-vc2022\glfw3.lib;$(SolutionDir)src\include\freetype\libs\freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\wikto\source\Billiards\src\include\freetype\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -192,8 +199,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)src\GLFW\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)src\include\GLFW\lib-vc2022\glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)src\include\GLFW\lib-vc2022\glfw3.lib;$(SolutionDir)src\include\freetype\libs\freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\wikto\source\Billiards\src\include\freetype\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

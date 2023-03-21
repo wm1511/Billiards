@@ -7,6 +7,7 @@ public:
 	Ball();
 	explicit Ball(int number);
 
-private:
+	inline static constexpr float radius_{0.0286f};
 
+private:
 };

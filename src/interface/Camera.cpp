@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "Camera.hpp"
 
-Camera::Camera()
-	: fov_(Config::fov), near_clip_(Config::near_clip), far_clip_(Config::far_clip), movement_speed_(Config::movement_speed), rotation_speed_(Config::rotation_speed)
+Camera::Camera() : fov_(Config::fov), near_clip_(Config::near_clip), far_clip_(Config::far_clip), movement_speed_(Config::movement_speed), rotation_speed_(Config::rotation_speed) {}
+
+void Camera::Init()
 {
-	projection_matrix_ = glm::perspective(glm::radians(fov_), 1.7916667f, near_clip_, far_clip_);
+	UpdateProjectionMatrix(Config::width, Config::height);
 	view_matrix_ = glm::mat4(1.0f);
 }
 
@@ -28,10 +29,10 @@ void Camera::UpdateViewMatrix(const float frame_time)
 
 void Camera::UpdateProjectionMatrix(const int width, const int height)
 {
-	projection_matrix_ = glm::perspective(glm::radians(fov_), (float)width / (float)height, near_clip_, far_clip_);
+	projection_matrix_ = glm::perspective(fov_, (float)width / (float)height, near_clip_, far_clip_);
 }
 
-void Camera::UpdateShader(const std::shared_ptr<Shader>& shader) const
+void Camera::Update(const std::shared_ptr<Shader>& shader) const
 {
 	shader->Bind();
 
@@ -40,9 +41,9 @@ void Camera::UpdateShader(const std::shared_ptr<Shader>& shader) const
 	shader->SetVec3(glm::vec3(10.0f), "lights[2].color");
 	shader->SetVec3(glm::vec3(10.0f), "lights[3].color");
 
-	shader->SetVec3(glm::vec3(-0.5f, 2.0f, 0.0f), "lights[0].position");
+	shader->SetVec3(glm::vec3(-1.0f, 2.0f, 0.0f), "lights[0].position");
 	shader->SetVec3(glm::vec3(0.0f, 2.0f, 0.0f), "lights[1].position");
-	shader->SetVec3(glm::vec3(0.5f, 2.0f, 0.0f), "lights[2].position");
+	shader->SetVec3(glm::vec3(1.0f, 2.0f, 0.0f), "lights[2].position");
 	shader->SetVec3(position_, "lights[3].position");
 
 	shader->SetMat4(view_matrix_, "viewMatrix");
@@ -55,7 +56,7 @@ void Camera::UpdateShader(const std::shared_ptr<Shader>& shader) const
 void Camera::Move(GLFWwindow* window, const glm::vec3& direction, const float factor)
 {
 	constexpr glm::vec3 up = {0.0f, 1.0f, 0.0f};
-	const glm::vec3 right = glm::cross(direction, up);
+	const glm::vec3 right = glm::normalize(glm::cross(direction, up));
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
@@ -81,6 +82,8 @@ void Camera::Move(GLFWwindow* window, const glm::vec3& direction, const float fa
 	{
 		position_ -= up * factor;
 	}
+
+	position_ = glm::clamp(position_, Config::camera_min_position, Config::camera_max_position);
 }
 
 void Camera::Rotate(GLFWwindow* window, const float factor)
