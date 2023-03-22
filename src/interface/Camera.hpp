@@ -4,7 +4,7 @@
 class Camera
 {
 public:
-	Camera();
+	Camera() = default;
 
 	void Init();
 	void UpdateViewMatrix(float frame_time);
@@ -22,10 +22,4 @@ private:
 	glm::vec3 position_{0.0f, 2.0f, 0.0f};
 	float pitch_{-glm::half_pi<float>()};
 	float yaw_{0.0f};
-
-	float fov_{};
-	float near_clip_{};
-	float far_clip_{};
-	float movement_speed_{};
-	float rotation_speed_{};
 };

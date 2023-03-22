@@ -3,10 +3,10 @@
 
 struct Character
 {
-    unsigned texture_id{};
-    glm::ivec2 size{};     
-    glm::ivec2 bearing{};  
-    unsigned advance{};  
+	unsigned texture_id{};
+	glm::ivec2 size{};
+	glm::ivec2 bearing{};
+	unsigned advance{};
 };
 
 class TextRenderer
@@ -16,15 +16,35 @@ public:
 	void Init();
 	void UpdateProjectionMatrix(int width, int height);
 	void Update() const;
-	void Render(const std::u16string& text, float x = 0.0f, float = 0.0f, glm::vec3 color = glm::vec3(1.0f));
+
+	template <typename... Args> void Render(float x, float y, const std::string& format_string, Args&&... args)
+	{
+		shader_->Bind();
+
+		shader_->SetVec3(glm::vec3(1.0f), "textColor");
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindVertexArray(vao_);
+
+		const std::string text = std::vformat(format_string, std::make_format_args(std::forward<Args>(args)...));
+
+		for (const auto& c : text)
+			RenderCharacter(x, y, c);
+
+		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		shader_->Unbind();
+	}
 
 private:
+	void RenderCharacter(float& x, float& y, char character);
 	void Load();
 
-	std::map<char16_t, Character> characters_{};
-	glm::mat4 projection_matrix_{};
+	std::map<int, Character> characters_{};
 	std::unique_ptr<Shader> shader_ = nullptr;
 
 	unsigned vao_, vbo_;
-	glm::vec2 scale_{1.0f};
+	glm::vec2 scale_{ 1.0f };
+	glm::mat4 projection_matrix_{};
 };

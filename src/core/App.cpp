@@ -31,19 +31,19 @@ void App::Run()
 
 void App::OnUpdate()
 {
-	const auto start = glfwGetTime();
+	const double current_frame = glfwGetTime();
+	delta_time_ = current_frame - last_frame_;
+	last_frame_ = current_frame;
 
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	camera_->UpdateViewMatrix(frame_time_);
+	camera_->UpdateViewMatrix(static_cast<float>(delta_time_));
 	camera_->Update(shader_);
 
 	world_->Draw(shader_);
 
-	text_renderer_->Render(u"Nie wiem co to złożoność obliczeniowa", 20.0f, 40.0f);
-
-	frame_time_ = static_cast<float>(glfwGetTime() - start);
+	text_renderer_->Render(0.0f, static_cast<float>(window_->GetHeight() - Config::default_font_size), "FPS: {}", static_cast<int>(1.0 / delta_time_));
 }
 
 void App::OnResize() const
@@ -61,10 +61,9 @@ void App::OnResize() const
 
 void App::Init() const
 {
-	glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_MULTISAMPLE); 
+	glEnable(GL_MULTISAMPLE);
 	glViewport(0, 0, window_->GetWidth(), window_->GetHeight());
 }

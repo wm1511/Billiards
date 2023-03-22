@@ -2,7 +2,7 @@
 # www.blender.org
 
 newmtl Ball
-Kd 0.000000 0.000000 0.000000
-Pr 0.050000
-Pm 0.000000
-map_Kd ../textures/ball0.jpg
+map_Kd ball0.jpg
+Ka 1.0
+Pr 0.2
+Pm 0.0

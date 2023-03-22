@@ -51,11 +51,14 @@ void Loader::LoadMaterials(std::vector<std::shared_ptr<Material>>& materials, co
 	{
 		materials.push_back(std::make_shared<Material>
 		(
-			material.metallic,
-			material.roughness,
 			glm::vec3{material.diffuse[0], material.diffuse[1], material.diffuse[2]},
+			glm::vec3{material.ambient[0], material.ambient[1], material.ambient[2]},
+			material.roughness,
+			material.metallic,
 			LoadTexture(material.diffuse_texname),
+			LoadTexture(material.ambient_texname),
 			LoadTexture(material.roughness_texname),
+			LoadTexture(material.metallic_texname),
 			LoadTexture(material.normal_texname)
 		));
 	}
@@ -122,7 +125,7 @@ void Loader::LoadImage(const std::string& path, unsigned char*& image_data, int&
 	const auto image_path = std::filesystem::current_path() / "assets/textures" / path;
 
 	if (!stbi_info(image_path.string().c_str(), &width, &height, &channels))
-		[[unlikely]] throw std::exception(std::string(path + " is not a valid image file").c_str());
+		[[unlikely]] throw std::exception(std::string(path + " cannot be found or loaded as an image").c_str());
 
 	image_data = stbi_load(image_path.string().c_str(), &width, &height, &channels, 0);
 }
@@ -133,7 +136,7 @@ void Loader::LoadHdr(const std::string& path, float*& hdr_data, int& width, int&
 	const auto image_path = std::filesystem::current_path() / "assets/hdr" / path;
 
 	if (!stbi_info(image_path.string().c_str(), &width, &height, &channels))
-		[[unlikely]] throw std::exception(std::string(path + " is not a valid HDR file").c_str());
+		[[unlikely]] throw std::exception(std::string(path + " cannot be found or loaded as an HDR image").c_str());
 
 	hdr_data = stbi_loadf(image_path.string().c_str(), &width, &height, &channels, 3);
 }

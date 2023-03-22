@@ -14,9 +14,9 @@ uniform mat4 projectionMatrix;
 
 void main()
 {
-	Position = vec4(modelMatrix * vec4(vertex_position, 1.f)).xyz;
-	TexCoords = vec2(vertex_texcoord.x, vertex_texcoord.y * -1.f);
+	Position = vec3(modelMatrix * vec4(vertex_position, 1.0));
+	TexCoords = vec2(vertex_texcoord.x, vertex_texcoord.y * -1.0);
 	Normal = mat3(modelMatrix) * vertex_normal;
 
-	gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertex_position, 1.f);
+	gl_Position = projectionMatrix * viewMatrix * vec4(Position, 1.0);
 }

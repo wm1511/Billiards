@@ -29,5 +29,6 @@ private:
 
 	std::shared_ptr<Shader> shader_ = nullptr;
 
-	float frame_time_{1.0f};
+	double delta_time_ = 0.0f;	
+	double last_frame_ = 0.0f;
 };

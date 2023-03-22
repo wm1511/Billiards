@@ -5,7 +5,18 @@
 
 Texture::Texture(unsigned char* image_data, const int width, const int height, const int channels) : texture_{}
 {
-	const int image_type = channels == 4 ? GL_RGBA : GL_RGB;
+	int image_type;
+
+	if (channels == 1)
+		image_type = GL_RED;
+	else if (channels == 2)
+		image_type = GL_RG;
+	else if (channels == 3)
+		image_type = GL_RGB;
+	else if (channels == 4)
+		image_type = GL_RGBA;
+	else
+		throw std::exception("Invalid image channel count");
 
 	glGenTextures(1, &texture_);
 	glBindTexture(GL_TEXTURE_2D, texture_);

@@ -2,26 +2,28 @@
 # www.blender.org
 
 newmtl Base
-Kd 0.035000 0.035000 0.035000
-Pr 0.300000
-Pm 1.000000
+map_Kd metal_base_d.png
+map_Ka metal_base_a.png
+map_Pr metal_base_r.png
+Pm 1.0
+norm metal_base_n.png
 
 newmtl Corners
-Kd 1.000000 1.000000 1.000000
-Pr 0.100000
-Pm 1.000000
+Kd 0.7 0.7 0.7
+Ka 1.0 1.0 1.0
+map_Pr metal_corners_r.png
+Pm 1.0
 
 newmtl Plane
-Kd 0.000000 0.000000 0.000000
-Pr 0.800000
-Pm 0.000000
-map_Kd fabric-d.png
-norm fabric-n.png
+map_Kd fabric_d.jpg
+map_Ka fabric_a.jpg
+map_Pr fabric_r.jpg
+Pm 0.0
+norm fabric_n.jpg
 
 newmtl Wood
-Kd 0.000000 0.000000 0.000000
-Pr 0.000000
-Pm 0.000000
-map_Kd ../textures/wood_table_d.png
-map_Pr ../textures/wood_table_r.png
-norm ../textures/wood_table_n.png
+map_Kd wood_table_d.png
+Ka 1.0 1.0 1.0
+map_Pr wood_table_r.png
+Pm 0.0
+norm wood_table_n.png

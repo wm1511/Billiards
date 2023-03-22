@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Camera.hpp"
 
-Camera::Camera() : fov_(Config::fov), near_clip_(Config::near_clip), far_clip_(Config::far_clip), movement_speed_(Config::movement_speed), rotation_speed_(Config::rotation_speed) {}
-
 void Camera::Init()
 {
 	UpdateProjectionMatrix(Config::width, Config::height);
@@ -18,33 +16,41 @@ void Camera::UpdateViewMatrix(const float frame_time)
         cos(yaw_) * cos(pitch_),
         sin(pitch_),
 		sin(yaw_) * cos(pitch_)));
-	
-	Move(window, direction, movement_speed_ /** frame_time*/);
 
 	if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
-		Rotate(window, rotation_speed_ /** frame_time*/);
+	{
+		Move(window, direction, Config::movement_speed * frame_time);
+		Rotate(window, Config::rotation_speed * frame_time);
+	}
 
 	view_matrix_ = glm::lookAt(position_, position_ + direction, up);
 }
 
 void Camera::UpdateProjectionMatrix(const int width, const int height)
 {
-	projection_matrix_ = glm::perspective(fov_, (float)width / (float)height, near_clip_, far_clip_);
+	projection_matrix_ = glm::perspective(Config::fov, static_cast<float>(width) / static_cast<float>(height), Config::near_clip, Config::far_clip);
 }
 
 void Camera::Update(const std::shared_ptr<Shader>& shader) const
 {
 	shader->Bind();
 
-	shader->SetVec3(glm::vec3(10.0f), "lights[0].color");
-	shader->SetVec3(glm::vec3(10.0f), "lights[1].color");
-	shader->SetVec3(glm::vec3(10.0f), "lights[2].color");
-	shader->SetVec3(glm::vec3(10.0f), "lights[3].color");
+	for (int i = 0; i < Config::light_count; i++)
+	{
+		shader->SetVec3(glm::vec3(20.0f), std::string("lights[") + std::to_string(i) + "].color");
+		shader->SetVec3(glm::vec3(-2.0f + 2.0f * i, 2.0f, 0.0f), std::string("lights[") + std::to_string(i) + "].position");
+	}
 
-	shader->SetVec3(glm::vec3(-1.0f, 2.0f, 0.0f), "lights[0].position");
-	shader->SetVec3(glm::vec3(0.0f, 2.0f, 0.0f), "lights[1].position");
-	shader->SetVec3(glm::vec3(1.0f, 2.0f, 0.0f), "lights[2].position");
-	shader->SetVec3(position_, "lights[3].position");
+	if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		shader->SetVec3(glm::vec3(10.0f), std::string("lights[") + std::to_string(Config::light_count) + "].color");
+		shader->SetVec3(position_, std::string("lights[") + std::to_string(Config::light_count) + "].position");
+		shader->SetInt(Config::light_count + 1, "lightCount");
+	}
+	else
+	{
+		shader->SetInt(Config::light_count, "lightCount");
+	}
 
 	shader->SetMat4(view_matrix_, "viewMatrix");
     shader->SetMat4(projection_matrix_, "projectionMatrix");
