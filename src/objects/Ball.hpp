@@ -1,7 +1,7 @@
 #pragma once
 #include "Object.hpp"
 
-class Ball : public Object
+class Ball final : public Object
 {
 public:
 	Ball();

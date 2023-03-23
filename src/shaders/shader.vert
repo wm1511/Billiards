@@ -12,11 +12,17 @@ uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
+uniform bool reverse_normals;
+
 void main()
 {
 	Position = vec3(modelMatrix * vec4(vertex_position, 1.0));
 	TexCoords = vec2(vertex_texcoord.x, vertex_texcoord.y * -1.0);
-	Normal = mat3(modelMatrix) * vertex_normal;
+
+	if(reverse_normals)
+        Normal = transpose(inverse(mat3(modelMatrix))) * (-1.0 * vertex_normal);
+    else
+        Normal = transpose(inverse(mat3(modelMatrix))) * vertex_normal;
 
 	gl_Position = projectionMatrix * viewMatrix * vec4(Position, 1.0);
 }

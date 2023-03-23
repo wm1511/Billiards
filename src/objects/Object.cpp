@@ -7,7 +7,7 @@ Object::Object(const std::string& path)
 	Loader::LoadModel(path, meshes_, materials_);
 }
 
-void Object::Draw(const std::shared_ptr<Shader>& shader) const
+void Object::Draw(const std::shared_ptr<Shader>& shader, const unsigned type) const
 {
 	shader->Bind();
 
@@ -17,13 +17,13 @@ void Object::Draw(const std::shared_ptr<Shader>& shader) const
 	{
 		const auto material = materials_[mesh->GetMaterialId()];
 
-		material->Bind(shader);
+		material->Bind(shader, type);
 		mesh->Bind();
 		mesh->Draw();
 		mesh->Unbind();
 		material->Unbind(shader);
 	}
-	
+
 	shader->Unbind();
 }
 
@@ -40,6 +40,7 @@ void Object::Scale(const glm::vec3& scale)
 void Object::Rotate(const glm::vec3& rotation)
 {
 	rotation_ += rotation;
+	rotation_ = glm::mod(rotation_, glm::two_pi<float>());
 }
 
 glm::mat4 Object::GetModelMatrix() const

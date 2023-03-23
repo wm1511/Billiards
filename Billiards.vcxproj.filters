@@ -66,6 +66,9 @@
     <ClCompile Include="src\objects\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\objects\CubeMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.h">
@@ -128,11 +131,17 @@
     <ClInclude Include="src\objects\Hole.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\objects\CubeMap.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\shader.frag" />
     <None Include="src\shaders\shader.vert" />
     <None Include="src\shaders\text.frag" />
     <None Include="src\shaders\text.vert" />
+    <None Include="src\shaders\shadow.frag" />
+    <None Include="src\shaders\shadow.geom" />
+    <None Include="src\shaders\shadow.vert" />
   </ItemGroup>
 </Project>

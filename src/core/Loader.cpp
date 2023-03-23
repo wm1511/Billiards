@@ -31,7 +31,7 @@ std::shared_ptr<Texture> Loader::LoadTexture(const std::string& path)
 {
 	if (path.empty())
 		return nullptr;
-	
+
 	if (unique_textures_.contains(path))
 		return unique_textures_[path];
 
@@ -50,71 +50,71 @@ void Loader::LoadMaterials(std::vector<std::shared_ptr<Material>>& materials, co
 	for (const auto& material : temp_materials)
 	{
 		materials.push_back(std::make_shared<Material>
-		(
-			glm::vec3{material.diffuse[0], material.diffuse[1], material.diffuse[2]},
-			glm::vec3{material.ambient[0], material.ambient[1], material.ambient[2]},
-			material.roughness,
-			material.metallic,
-			LoadTexture(material.diffuse_texname),
-			LoadTexture(material.ambient_texname),
-			LoadTexture(material.roughness_texname),
-			LoadTexture(material.metallic_texname),
-			LoadTexture(material.normal_texname)
-		));
+			(
+				glm::vec3{ material.diffuse[0], material.diffuse[1], material.diffuse[2] },
+				glm::vec3{ material.ambient[0], material.ambient[1], material.ambient[2] },
+				material.roughness,
+				material.metallic,
+				LoadTexture(material.diffuse_texname),
+				LoadTexture(material.ambient_texname),
+				LoadTexture(material.roughness_texname),
+				LoadTexture(material.metallic_texname),
+				LoadTexture(material.normal_texname)
+			));
 	}
 }
 
 void Loader::LoadMeshes(std::vector<std::shared_ptr<Mesh>>& meshes, const std::vector<tinyobj::shape_t>& temp_shapes, const tinyobj::attrib_t& temp_attrib)
 {
 	std::unordered_map<Vertex, uint32_t> unique_vertices;
-    for (const auto& shape : temp_shapes)
-    {
+	for (const auto& shape : temp_shapes)
+	{
 		std::vector<Vertex> vertices{};
 		std::vector<unsigned> indices{};
 
-        size_t index_offset = 0;
-        for (size_t f = 0; f < shape.mesh.num_face_vertices.size(); f++)
-        {
-	        for (size_t v = 0; v < 3; v++)
-	        {
+		size_t index_offset = 0;
+		for (size_t f = 0; f < shape.mesh.num_face_vertices.size(); f++)
+		{
+			for (size_t v = 0; v < 3; v++)
+			{
 				Vertex vertex{};
 				const auto index = shape.mesh.indices[index_offset + v];
 
 				vertex.position =
-                {
-                    temp_attrib.vertices[3 * index.vertex_index + 0],
-                    temp_attrib.vertices[3 * index.vertex_index + 1],
-                    temp_attrib.vertices[3 * index.vertex_index + 2],
-                };
+				{
+					temp_attrib.vertices[3 * index.vertex_index + 0],
+					temp_attrib.vertices[3 * index.vertex_index + 1],
+					temp_attrib.vertices[3 * index.vertex_index + 2],
+				};
 
 				if (index.normal_index >= 0)
-	            {
-	                vertex.normal =
-	                {
-	                    temp_attrib.normals[3 * index.normal_index + 0],
-	                    temp_attrib.normals[3 * index.normal_index + 1],
-	                    temp_attrib.normals[3 * index.normal_index + 2],
-	                };
-	            }
+				{
+					vertex.normal =
+					{
+						temp_attrib.normals[3 * index.normal_index + 0],
+						temp_attrib.normals[3 * index.normal_index + 1],
+						temp_attrib.normals[3 * index.normal_index + 2],
+					};
+				}
 
-	            if (index.texcoord_index >= 0)
-	            {
-	                vertex.uv =
-	                {
-	                    temp_attrib.texcoords[2 * index.texcoord_index + 0],
-	                    temp_attrib.texcoords[2 * index.texcoord_index + 1],
-	                };
-	            }
+				if (index.texcoord_index >= 0)
+				{
+					vertex.uv =
+					{
+						temp_attrib.texcoords[2 * index.texcoord_index + 0],
+						temp_attrib.texcoords[2 * index.texcoord_index + 1],
+					};
+				}
 
 				if (!unique_vertices.contains(vertex))
-	            {
-	                unique_vertices[vertex] = static_cast<unsigned>(vertices.size());
-	                vertices.push_back(vertex);
-	            }
-	            indices.push_back(unique_vertices[vertex]);
-	        }
-	        index_offset += 3;
-        }
+				{
+					unique_vertices[vertex] = static_cast<unsigned>(vertices.size());
+					vertices.push_back(vertex);
+				}
+				indices.push_back(unique_vertices[vertex]);
+			}
+			index_offset += 3;
+		}
 
 		meshes.push_back(std::make_shared<Mesh>(vertices, indices, shape.mesh.material_ids[0]));
 	}

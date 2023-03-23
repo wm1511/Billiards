@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Material.hpp"
 
-void Material::Bind(const std::shared_ptr<Shader>& shader) const
+void Material::Bind(const std::shared_ptr<Shader>& shader, const unsigned type) const
 {
 	shader->SetVec3(diffuse, "material.diffuse");
 	shader->SetVec3(ambient, "material.ao");
@@ -14,7 +14,7 @@ void Material::Bind(const std::shared_ptr<Shader>& shader) const
 		glActiveTexture(GL_TEXTURE0 + id);
 		shader->SetInt(id, "material.diffuseMap");
 		shader->SetBool(true, "material.hasDiffuseMap");
-		diffuse_texture->Bind();
+		diffuse_texture->Bind(type);
 	}
 
 	if (roughness_texture)
@@ -23,7 +23,7 @@ void Material::Bind(const std::shared_ptr<Shader>& shader) const
 		glActiveTexture(GL_TEXTURE0 + id);
 		shader->SetInt(id, "material.roughnessMap");
 		shader->SetBool(true, "material.hasRoughnessMap");
-		roughness_texture->Bind();
+		roughness_texture->Bind(type);
 	}
 
 	if (normal_texture)
@@ -32,7 +32,7 @@ void Material::Bind(const std::shared_ptr<Shader>& shader) const
 		glActiveTexture(GL_TEXTURE0 + id);
 		shader->SetInt(id, "material.normalMap");
 		shader->SetBool(true, "material.hasNormalMap");
-		normal_texture->Bind();
+		normal_texture->Bind(type);
 	}
 
 	if (ao_texture)
@@ -41,7 +41,7 @@ void Material::Bind(const std::shared_ptr<Shader>& shader) const
 		glActiveTexture(GL_TEXTURE0 + id);
 		shader->SetInt(id, "material.aoMap");
 		shader->SetBool(true, "material.hasAoMap");
-		roughness_texture->Bind();
+		roughness_texture->Bind(type);
 	}
 
 	if (normal_texture)
@@ -50,7 +50,7 @@ void Material::Bind(const std::shared_ptr<Shader>& shader) const
 		glActiveTexture(GL_TEXTURE0 + id);
 		shader->SetInt(id, "material.metallicMap");
 		shader->SetBool(true, "material.hasMetallicMap");
-		normal_texture->Bind();
+		normal_texture->Bind(type);
 	}
 }
 

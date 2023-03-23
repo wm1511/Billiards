@@ -1,5 +1,6 @@
 #pragma once
 #include "../objects/World.hpp"
+#include "../objects/CubeMap.hpp"
 #include "../interface/Camera.hpp"
 #include "../interface/Window.hpp"
 #include "../interface/TextRenderer.hpp"
@@ -26,8 +27,9 @@ private:
 	std::unique_ptr<Camera> camera_ = nullptr;
 	std::unique_ptr<World> world_ = nullptr;
 	std::unique_ptr<TextRenderer> text_renderer_ = nullptr;
-
+	std::unique_ptr<CubeMap> cube_map_ = nullptr;
 	std::shared_ptr<Shader> shader_ = nullptr;
+	std::shared_ptr<Shader> shadow_shader_ = nullptr;
 
 	double delta_time_ = 0.0f;	
 	double last_frame_ = 0.0f;

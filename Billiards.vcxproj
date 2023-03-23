@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\objects\CubeMap.cpp" />
     <ClCompile Include="src\objects\World.cpp" />
     <ClCompile Include="src\interface\TextRenderer.cpp" />
     <ClCompile Include="src\glad\src\gl.c">
@@ -49,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Config.hpp" />
+    <ClInclude Include="src\objects\CubeMap.hpp" />
     <ClInclude Include="src\objects\Hole.hpp" />
     <ClInclude Include="src\objects\World.hpp" />
     <ClInclude Include="src\interface\TextRenderer.hpp" />
@@ -72,6 +74,9 @@
   <ItemGroup>
     <None Include="src\shaders\shader.frag" />
     <None Include="src\shaders\shader.vert" />
+    <None Include="src\shaders\shadow.frag" />
+    <None Include="src\shaders\shadow.geom" />
+    <None Include="src\shaders\shadow.vert" />
     <None Include="src\shaders\text.frag" />
     <None Include="src\shaders\text.vert" />
   </ItemGroup>

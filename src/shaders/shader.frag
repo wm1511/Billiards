@@ -30,12 +30,44 @@ struct Light
     vec3 color;
 };
 
+uniform samplerCube depthMap;
 uniform int lightCount;
 uniform Light lights[4];
 uniform vec3 cameraPos;
 uniform Material material;
+uniform float far_plane;
 
 const float PI = 3.14159265359;
+
+vec3 gridSamplingDisk[20] = vec3[]
+(
+   vec3(1, 1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1, 1,  1), 
+   vec3(1, 1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
+   vec3(1, 1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1, 1,  0),
+   vec3(1, 0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1, 0, -1),
+   vec3(0, 1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0, 1, -1)
+);
+
+float ShadowCalculation(vec3 fragPos, vec3 lightPos)
+{
+    vec3 fragToLight = Position - lightPos;
+    float currentDepth = length(fragToLight);
+    float shadow = 0.0;
+    float bias = 0.15;
+    int samples = 20;
+    float viewDistance = length(cameraPos - Position);
+    float diskRadius = (1.0 + (viewDistance / far_plane)) / 25.0;
+    for(int i = 0; i < samples; ++i)
+    {
+        float closestDepth = texture(depthMap, fragToLight + gridSamplingDisk[i] * diskRadius).r;
+        closestDepth *= far_plane;
+
+        if(currentDepth - bias > closestDepth)
+            shadow += 1.0;
+    }
+    shadow /= float(samples);
+    return shadow;
+}
 
 vec3 getNormalFromMap()
 {
@@ -97,7 +129,7 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 void main()
 {
     vec3 diffuse = pow(material.diffuse, vec3(2.2));
-    vec3 ao = material.ao;
+    float ao = material.ao.r;
     float roughness = material.roughness;
     float metallic = material.metallic;
     vec3 N = normalize(Normal);
@@ -109,7 +141,7 @@ void main()
         roughness = texture(material.roughnessMap, TexCoords).r;
     
     if (material.hasAoMap)
-        ao = texture(material.aoMap, TexCoords).rgb;
+        ao = texture(material.aoMap, TexCoords).r;
 
     if (material.hasMetallicMap)
         metallic = texture(material.metallicMap, TexCoords).r;
@@ -145,7 +177,9 @@ void main()
 
         float NdotL = max(dot(N, L), 0.0);        
 
-        Lo += (kD * diffuse / PI + specular) * radiance * NdotL;
+        float shadow = ShadowCalculation(Position, lights[i].position);
+
+        Lo += (1.0 - shadow) * (kD * diffuse / PI + specular) * radiance * NdotL;
     }   
     
     vec3 ambient = diffuse * vec3(0.03) * ao;

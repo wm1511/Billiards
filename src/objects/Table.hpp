@@ -1,7 +1,7 @@
 #pragma once
 #include "Object.hpp"
 
-class Table : public Object
+class Table final : public Object
 {
 public:
 	Table();

@@ -1,8 +1,8 @@
 #pragma once
-#include "../objects/Cue.hpp"
-#include "../objects/Table.hpp"
-#include "../objects/Object.hpp"
-#include "../objects/Ball.hpp"
+#include "Cue.hpp"
+#include "Table.hpp"
+#include "Object.hpp"
+#include "Ball.hpp"
 
 class World
 {

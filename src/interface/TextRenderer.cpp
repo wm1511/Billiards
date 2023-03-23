@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "TextRenderer.hpp"
 
-TextRenderer::TextRenderer() : shader_(std::make_unique<Shader>(Config::text_vertex_path, Config::text_fragment_path)), vao_{}, vbo_{}
+TextRenderer::TextRenderer() : text_shader_(std::make_unique<Shader>(Config::text_vertex_path, Config::text_fragment_path)), vao_{}, vbo_{}
 {
 	Load();
 
@@ -30,16 +30,16 @@ void TextRenderer::UpdateProjectionMatrix(const int width, const int height)
 
 void TextRenderer::Update() const
 {
-	shader_->Bind();
+	text_shader_->Bind();
 
-	shader_->SetMat4(projection_matrix_, "projectionMatrix");
+	text_shader_->SetMat4(projection_matrix_, "projectionMatrix");
 
-	shader_->Unbind();
+	text_shader_->Unbind();
 }
 
 void TextRenderer::RenderCharacter(float& x, float& y, const char character)
 {
-	const Character ch = characters_[character];
+	const Character& ch = characters_[character];
 
 	const float position_x = x + ch.bearing.x * scale_.x;
 	const float position_y = y - (ch.size.y - ch.bearing.y) * scale_.y;
@@ -58,7 +58,8 @@ void TextRenderer::RenderCharacter(float& x, float& y, const char character)
 		{ position_x + w, position_y + h,   1.0f, 0.0f }
 	};
 
-	glBindTexture(GL_TEXTURE_2D, ch.texture_id);
+	if (ch.texture)
+		ch.texture->Bind();
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof vertices, vertices);
@@ -66,6 +67,8 @@ void TextRenderer::RenderCharacter(float& x, float& y, const char character)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	ch.texture->Unbind();
 
 	x += (ch.advance >> 6) * scale_.x;
 }
@@ -80,7 +83,7 @@ void TextRenderer::Load()
 
 	FT_Face face;
 	if (FT_New_Face(ft, font_path.string().c_str(), 0, &face))
-		[[unlikely]] throw std::exception(std::string("Failed to load font " + Config::font_path).c_str());
+		[[unlikely]] throw std::exception("Failed to load font");
 
 	FT_Set_Pixel_Sizes(face, 0, Config::default_font_size);
 	FT_Select_Charmap(face, FT_ENCODING_UNICODE);
@@ -92,26 +95,14 @@ void TextRenderer::Load()
 		if (FT_Load_Char(face, i, FT_LOAD_RENDER))
 			[[unlikely]] throw std::exception(std::string("Failed to load glyph \'" + i + '\'').c_str());
 
-		unsigned int texture;
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width, face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		Character character =
-		{
-			texture,
+		auto character = Character(
+			std::make_unique<Texture>(face->glyph->bitmap.buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows, 1, false),
 			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
 			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-			static_cast<unsigned>(face->glyph->advance.x)
-		};
-		characters_.insert(std::pair(i, character));
+			static_cast<unsigned>(face->glyph->advance.x));
+
+		characters_.insert(std::pair(i, std::move(character)));
 	}
-	glBindTexture(GL_TEXTURE_2D, 0);
 
 	FT_Done_Face(face);
 	FT_Done_FreeType(ft);

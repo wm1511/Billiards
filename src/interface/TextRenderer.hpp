@@ -1,9 +1,10 @@
 #pragma once
 #include "../core/Shader.hpp"
+#include "../core/Texture.hpp"
 
 struct Character
 {
-	unsigned texture_id{};
+	std::unique_ptr<Texture> texture = nullptr;
 	glm::ivec2 size{};
 	glm::ivec2 bearing{};
 	unsigned advance{};
@@ -19,9 +20,9 @@ public:
 
 	template <typename... Args> void Render(float x, float y, const std::string& format_string, Args&&... args)
 	{
-		shader_->Bind();
+		text_shader_->Bind();
 
-		shader_->SetVec3(glm::vec3(1.0f), "textColor");
+		text_shader_->SetVec3(glm::vec3(1.0f), "textColor");
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindVertexArray(vao_);
@@ -34,15 +35,15 @@ public:
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		shader_->Unbind();
+		text_shader_->Unbind();
 	}
 
 private:
 	void RenderCharacter(float& x, float& y, char character);
 	void Load();
 
-	std::map<int, Character> characters_{};
-	std::unique_ptr<Shader> shader_ = nullptr;
+	std::unordered_map<int, Character> characters_{};
+	std::unique_ptr<Shader> text_shader_ = nullptr;
 
 	unsigned vao_, vbo_;
 	glm::vec2 scale_{ 1.0f };

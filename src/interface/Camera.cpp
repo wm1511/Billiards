@@ -55,6 +55,7 @@ void Camera::Update(const std::shared_ptr<Shader>& shader) const
 	shader->SetMat4(view_matrix_, "viewMatrix");
     shader->SetMat4(projection_matrix_, "projectionMatrix");
     shader->SetVec3(position_, "cameraPos");
+	shader->SetFloat(Config::far_clip, "far_plane");
 
 	shader->Unbind();
 }

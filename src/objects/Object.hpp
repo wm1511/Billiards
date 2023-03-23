@@ -6,9 +6,11 @@
 class Object
 {
 public:
+	virtual ~Object() = default;
+	Object() = default;
 	explicit Object(const std::string& path);
-	void Draw(const std::shared_ptr<Shader>& shader) const;
 
+	virtual void Draw(const std::shared_ptr<Shader>& shader, unsigned type = GL_TEXTURE_2D) const;
 	void Translate(const glm::vec3& translation);
 	void Scale(const glm::vec3& scale);
 	void Rotate(const glm::vec3& rotation);

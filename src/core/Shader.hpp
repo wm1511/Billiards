@@ -3,7 +3,7 @@
 class Shader
 {
 public:
-	Shader(const std::string& vertex_path, const std::string& fragment_path);
+	Shader(const std::string& vertex_path, const std::string& fragment_path, const std::string& geometry_path = {});
 
 	void Bind() const;
 	void Unbind() const;
@@ -17,7 +17,7 @@ public:
 private:
 	[[nodiscard]] std::string LoadShaderSource(const std::string& path) const;
 	[[nodiscard]] unsigned LoadShader(unsigned type, const std::string& path) const;
-	void LinkProgram(unsigned vertex, unsigned fragment);
+	void LinkProgram(unsigned vertex, unsigned fragment, unsigned geometry = 0);
 
 	unsigned id_;
 };

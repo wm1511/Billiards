@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Shader.hpp"
 
-Shader::Shader(const std::string& vertex_path, const std::string& fragment_path) : id_(0)
+Shader::Shader(const std::string& vertex_path, const std::string& fragment_path, const std::string& geometry_path) : id_{}
 {
 	const auto vertex = std::filesystem::current_path() / "src/shaders" / vertex_path;
 	const auto fragment = std::filesystem::current_path() / "src/shaders" / fragment_path;
@@ -9,7 +9,15 @@ Shader::Shader(const std::string& vertex_path, const std::string& fragment_path)
 	const auto vertex_shader = LoadShader(GL_VERTEX_SHADER, vertex.string());
 	const auto fragment_shader = LoadShader(GL_FRAGMENT_SHADER, fragment.string());
 
-	LinkProgram(vertex_shader, fragment_shader);
+	unsigned geometry_shader = 0;
+
+	if (!geometry_path.empty())
+	{
+		const auto geometry = std::filesystem::current_path() / "src/shaders" / geometry_path;
+		geometry_shader = LoadShader(GL_GEOMETRY_SHADER, geometry.string());
+	}
+
+	LinkProgram(vertex_shader, fragment_shader, geometry_shader);
 
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
@@ -49,7 +57,7 @@ GLuint Shader::LoadShader(const unsigned type, const std::string& path) const
 	return shader;
 }
 
-void Shader::LinkProgram(const unsigned vertex, const unsigned fragment)
+void Shader::LinkProgram(const unsigned vertex, const unsigned fragment, const unsigned geometry)
 {
 	GLint success{0};
 
@@ -57,6 +65,9 @@ void Shader::LinkProgram(const unsigned vertex, const unsigned fragment)
 
 	glAttachShader(id_, vertex);
 	glAttachShader(id_, fragment);
+
+	if (geometry != 0)
+		glAttachShader(id_, geometry);
 
 	glLinkProgram(id_);
 	glValidateProgram(id_);

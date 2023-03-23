@@ -4,7 +4,7 @@
 class Mesh
 {
 public:
-	explicit Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned>& indices, int material_id);
+	explicit Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned>& indices = {}, int material_id = 0);
 	~Mesh();
 
 	Mesh(const Mesh&) = delete;
