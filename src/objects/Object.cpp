@@ -9,6 +9,8 @@ Object::Object(const std::string& path)
 
 void Object::Draw(const std::shared_ptr<Shader>& shader) const
 {
+	shader->Bind();
+
 	shader->SetMat4(GetModelMatrix(), "modelMatrix");
 
 	for (const auto& mesh : meshes_)
@@ -21,6 +23,8 @@ void Object::Draw(const std::shared_ptr<Shader>& shader) const
 		mesh->Unbind();
 		material->Unbind(shader);
 	}
+
+	shader->Unbind();
 }
 
 void Object::Translate(const glm::vec3& translation)

@@ -33,6 +33,7 @@ void Camera::UpdateProjectionMatrix(const int width, const int height)
 
 void Camera::UpdateMain(const std::shared_ptr<Shader>& main_shader) const
 {
+	main_shader->Bind();
 	main_shader->SetMat4(view_matrix_, "viewMatrix");
     main_shader->SetMat4(projection_matrix_, "projectionMatrix");
     main_shader->SetVec3(position_, "cameraPos");
@@ -54,12 +55,15 @@ void Camera::UpdateMain(const std::shared_ptr<Shader>& main_shader) const
 	{
 		main_shader->SetInt(Config::light_count, "lightCount");
 	}
+	main_shader->Unbind();
 }
 
 void Camera::UpdateBackground(const std::shared_ptr<Shader>& background_shader) const
 {
+	background_shader->Bind();
 	background_shader->SetMat4(view_matrix_, "viewMatrix");
 	background_shader->SetMat4(projection_matrix_, "projectionMatrix");
+	background_shader->Unbind();
 }
 
 void Camera::Move(GLFWwindow* window, const glm::vec3& direction, const float factor)

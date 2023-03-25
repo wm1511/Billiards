@@ -18,7 +18,7 @@ public:
 	void UpdateProjectionMatrix(int width, int height);
 	void Update() const;
 
-	template <typename... Args> void Render(float x, float y, const std::string& format_string, Args&&... args)
+	template <typename... Args> void Render(float x, float y, const std::string& format_string, Args&&... format_args)
 	{
 		text_shader_->Bind();
 
@@ -27,7 +27,7 @@ public:
 		glActiveTexture(GL_TEXTURE0);
 		glBindVertexArray(vao_);
 
-		const std::string text = std::vformat(format_string, std::make_format_args(std::forward<Args>(args)...));
+		const std::string text = std::vformat(format_string, std::make_format_args(std::forward<Args>(format_args)...));
 
 		for (const auto& c : text)
 			RenderCharacter(x, y, c);

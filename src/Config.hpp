@@ -44,7 +44,7 @@ struct Config
 	inline static constexpr const char* const hdr_path = "comfy_cafe_4k.hdr";
 	inline static constexpr int cube_map_size = 1024;
 	inline static constexpr int irradiance_scale = 32;
-	inline static constexpr int prefilter_scale = 128;
+	inline static constexpr int prefilter_scale = 256;
 	inline static constexpr int max_mip_levels = 5;
 
 	// Font

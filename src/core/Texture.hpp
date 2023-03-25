@@ -14,7 +14,6 @@ public:
 	Texture& operator= (Texture&&) = delete;
 
 	void Bind() const;
-	//void Unbind() const;
 	[[nodiscard]] int GetId() const { return static_cast<int>(texture_); }
 
 private:

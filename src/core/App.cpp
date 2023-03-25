@@ -40,28 +40,13 @@ void App::OnUpdate()
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	main_shader_->Bind();
-
-	main_shader_->SetInt(1, "irradianceMap");
-    main_shader_->SetInt(2, "prefilterMap");
-    main_shader_->SetInt(3, "brdfLUT");
-	main_shader_->SetInt(4, "material.diffuseMap");
-	main_shader_->SetInt(5, "material.roughnessMap");
-	main_shader_->SetInt(6, "material.normalMap");
-	main_shader_->SetInt(7, "material.aoMap");
-	main_shader_->SetInt(8, "material.metallicMap");
-
 	camera_->UpdateViewMatrix(static_cast<float>(delta_time_));
 	camera_->UpdateMain(main_shader_);
 
-	//environment_->Prepare();
-
+	environment_->Prepare();
 	world_->Draw(main_shader_);
 
-	background_shader_->Bind();
-
 	camera_->UpdateBackground(background_shader_);
-
 	environment_->Draw(background_shader_);
 
 	text_renderer_->Render(0.0f, static_cast<float>(window_->GetHeight() - Config::default_font_size), "FPS: {}", static_cast<int>(1.0 / delta_time_));
@@ -89,4 +74,15 @@ void App::Init() const
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	glEnable(GL_MULTISAMPLE);
 	glViewport(0, 0, window_->GetWidth(), window_->GetHeight());
+
+	main_shader_->Bind();
+	main_shader_->SetInt(1, "irradianceMap");
+    main_shader_->SetInt(2, "prefilterMap");
+    main_shader_->SetInt(3, "brdfLUT");
+	main_shader_->SetInt(4, "material.diffuseMap");
+	main_shader_->SetInt(5, "material.roughnessMap");
+	main_shader_->SetInt(6, "material.normalMap");
+	main_shader_->SetInt(7, "material.aoMap");
+	main_shader_->SetInt(8, "material.metallicMap");
+	main_shader_->Unbind();
 }

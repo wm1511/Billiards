@@ -88,6 +88,11 @@ void Shader::Bind() const
 	glUseProgram(id_);
 }
 
+void Shader::Unbind() const
+{
+	glUseProgram(0);
+}
+
 void Shader::SetMat4(const glm::mat4& m, const std::string& name) const
 {
 	const auto my_loc = glGetUniformLocation(id_, name.c_str());

@@ -72,8 +72,3 @@ void Texture::Bind() const
 {
 	glBindTexture(type_, texture_);
 }
-
-//void Texture::Unbind() const
-//{
-//	glBindTexture(type_, 0);
-//}

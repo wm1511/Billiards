@@ -49,6 +49,7 @@ void Environment::Prepare() const
 
 void Environment::Draw(const std::shared_ptr<Shader>& background_shader) const
 {
+    background_shader->Bind();
 	glActiveTexture(GL_TEXTURE1);
     cube_map_->Bind();
     background_shader->SetInt(1, "environmentMap");
@@ -56,6 +57,7 @@ void Environment::Draw(const std::shared_ptr<Shader>& background_shader) const
     cube_->Bind();
 	cube_->Draw();
 	cube_->Unbind();
+    background_shader->Unbind();
 }
 
 void Environment::CreateBuffers()
@@ -73,47 +75,47 @@ void Environment::CreateCube()
 {
 	std::vector vertices
 	{
-        Vertex(glm::vec3{-1.0f, -1.0f, -1.0f}, glm::vec2{0.0f, 0.0f}, glm::vec3{0.0f,  0.0f, -1.0f}), 
-        Vertex(glm::vec3{ 1.0f,  1.0f, -1.0f}, glm::vec2{1.0f, 1.0f}, glm::vec3{0.0f,  0.0f, -1.0f}), 
-        Vertex(glm::vec3{ 1.0f, -1.0f, -1.0f}, glm::vec2{1.0f, 0.0f}, glm::vec3{0.0f,  0.0f, -1.0f}),          
-        Vertex(glm::vec3{ 1.0f,  1.0f, -1.0f}, glm::vec2{1.0f, 1.0f}, glm::vec3{0.0f,  0.0f, -1.0f}), 
-        Vertex(glm::vec3{-1.0f, -1.0f, -1.0f}, glm::vec2{0.0f, 0.0f}, glm::vec3{0.0f,  0.0f, -1.0f}), 
-        Vertex(glm::vec3{-1.0f,  1.0f, -1.0f}, glm::vec2{0.0f, 1.0f}, glm::vec3{0.0f,  0.0f, -1.0f}), 
+        Vertex(glm::vec3{-1.0f, -1.0f, -1.0f}, glm::vec3{0.0f,  0.0f, -1.0f}, glm::vec2{0.0f, 0.0f}), 
+        Vertex(glm::vec3{ 1.0f,  1.0f, -1.0f}, glm::vec3{0.0f,  0.0f, -1.0f}, glm::vec2{1.0f, 1.0f}), 
+        Vertex(glm::vec3{ 1.0f, -1.0f, -1.0f}, glm::vec3{0.0f,  0.0f, -1.0f}, glm::vec2{1.0f, 0.0f}),          
+        Vertex(glm::vec3{ 1.0f,  1.0f, -1.0f}, glm::vec3{0.0f,  0.0f, -1.0f}, glm::vec2{1.0f, 1.0f}), 
+        Vertex(glm::vec3{-1.0f, -1.0f, -1.0f}, glm::vec3{0.0f,  0.0f, -1.0f}, glm::vec2{0.0f, 0.0f}), 
+        Vertex(glm::vec3{-1.0f,  1.0f, -1.0f}, glm::vec3{0.0f,  0.0f, -1.0f}, glm::vec2{0.0f, 1.0f}), 
                                
-		Vertex(glm::vec3{-1.0f, -1.0f,  1.0f}, glm::vec2{0.0f, 0.0f}, glm::vec3{0.0f,  0.0f,  1.0f}), 
-        Vertex(glm::vec3{ 1.0f, -1.0f,  1.0f}, glm::vec2{1.0f, 0.0f}, glm::vec3{0.0f,  0.0f,  1.0f}), 
-        Vertex(glm::vec3{ 1.0f,  1.0f,  1.0f}, glm::vec2{1.0f, 1.0f}, glm::vec3{0.0f,  0.0f,  1.0f}), 
-        Vertex(glm::vec3{ 1.0f,  1.0f,  1.0f}, glm::vec2{1.0f, 1.0f}, glm::vec3{0.0f,  0.0f,  1.0f}), 
-        Vertex(glm::vec3{-1.0f,  1.0f,  1.0f}, glm::vec2{0.0f, 1.0f}, glm::vec3{0.0f,  0.0f,  1.0f}), 
-        Vertex(glm::vec3{-1.0f, -1.0f,  1.0f}, glm::vec2{0.0f, 0.0f}, glm::vec3{0.0f,  0.0f,  1.0f}), 
+		Vertex(glm::vec3{-1.0f, -1.0f,  1.0f}, glm::vec3{0.0f,  0.0f,  1.0f}, glm::vec2{0.0f, 0.0f}), 
+        Vertex(glm::vec3{ 1.0f, -1.0f,  1.0f}, glm::vec3{0.0f,  0.0f,  1.0f}, glm::vec2{1.0f, 0.0f}), 
+        Vertex(glm::vec3{ 1.0f,  1.0f,  1.0f}, glm::vec3{0.0f,  0.0f,  1.0f}, glm::vec2{1.0f, 1.0f}), 
+        Vertex(glm::vec3{ 1.0f,  1.0f,  1.0f}, glm::vec3{0.0f,  0.0f,  1.0f}, glm::vec2{1.0f, 1.0f}), 
+        Vertex(glm::vec3{-1.0f,  1.0f,  1.0f}, glm::vec3{0.0f,  0.0f,  1.0f}, glm::vec2{0.0f, 1.0f}), 
+        Vertex(glm::vec3{-1.0f, -1.0f,  1.0f}, glm::vec3{0.0f,  0.0f,  1.0f}, glm::vec2{0.0f, 0.0f}), 
                     
-		Vertex(glm::vec3{-1.0f,  1.0f,  1.0f}, glm::vec2{1.0f, 0.0f},-glm::vec3{1.0f,  0.0f,  0.0f}), 
-        Vertex(glm::vec3{-1.0f,  1.0f, -1.0f}, glm::vec2{1.0f, 1.0f},-glm::vec3{1.0f,  0.0f,  0.0f}), 
-        Vertex(glm::vec3{-1.0f, -1.0f, -1.0f}, glm::vec2{0.0f, 1.0f},-glm::vec3{1.0f,  0.0f,  0.0f}), 
-        Vertex(glm::vec3{-1.0f, -1.0f, -1.0f}, glm::vec2{0.0f, 1.0f},-glm::vec3{1.0f,  0.0f,  0.0f}), 
-        Vertex(glm::vec3{-1.0f, -1.0f,  1.0f}, glm::vec2{0.0f, 0.0f},-glm::vec3{1.0f,  0.0f,  0.0f}), 
-        Vertex(glm::vec3{-1.0f,  1.0f,  1.0f}, glm::vec2{1.0f, 0.0f},-glm::vec3{1.0f,  0.0f,  0.0f}), 
+		Vertex(glm::vec3{-1.0f,  1.0f,  1.0f}, glm::vec3{-1.0f, 0.0f,  0.0f}, glm::vec2{1.0f, 0.0f}), 
+        Vertex(glm::vec3{-1.0f,  1.0f, -1.0f}, glm::vec3{-1.0f, 0.0f,  0.0f}, glm::vec2{1.0f, 1.0f}), 
+        Vertex(glm::vec3{-1.0f, -1.0f, -1.0f}, glm::vec3{-1.0f, 0.0f,  0.0f}, glm::vec2{0.0f, 1.0f}), 
+        Vertex(glm::vec3{-1.0f, -1.0f, -1.0f}, glm::vec3{-1.0f, 0.0f,  0.0f}, glm::vec2{0.0f, 1.0f}), 
+        Vertex(glm::vec3{-1.0f, -1.0f,  1.0f}, glm::vec3{-1.0f, 0.0f,  0.0f}, glm::vec2{0.0f, 0.0f}), 
+        Vertex(glm::vec3{-1.0f,  1.0f,  1.0f}, glm::vec3{-1.0f, 0.0f,  0.0f}, glm::vec2{1.0f, 0.0f}), 
 
-		Vertex(glm::vec3{ 1.0f,  1.0f,  1.0f}, glm::vec2{1.0f, 0.0f}, glm::vec3{1.0f,  0.0f,  0.0f}), 
-        Vertex(glm::vec3{ 1.0f, -1.0f, -1.0f}, glm::vec2{0.0f, 1.0f}, glm::vec3{1.0f,  0.0f,  0.0f}), 
-        Vertex(glm::vec3{ 1.0f,  1.0f, -1.0f}, glm::vec2{1.0f, 1.0f}, glm::vec3{1.0f,  0.0f,  0.0f}),       
-        Vertex(glm::vec3{ 1.0f, -1.0f, -1.0f}, glm::vec2{0.0f, 1.0f}, glm::vec3{1.0f,  0.0f,  0.0f}), 
-        Vertex(glm::vec3{ 1.0f,  1.0f,  1.0f}, glm::vec2{1.0f, 0.0f}, glm::vec3{1.0f,  0.0f,  0.0f}), 
-        Vertex(glm::vec3{ 1.0f, -1.0f,  1.0f}, glm::vec2{0.0f, 0.0f}, glm::vec3{1.0f,  0.0f,  0.0f}),     
+		Vertex(glm::vec3{ 1.0f,  1.0f,  1.0f}, glm::vec3{1.0f,  0.0f,  0.0f}, glm::vec2{1.0f, 0.0f}), 
+        Vertex(glm::vec3{ 1.0f, -1.0f, -1.0f}, glm::vec3{1.0f,  0.0f,  0.0f}, glm::vec2{0.0f, 1.0f}), 
+        Vertex(glm::vec3{ 1.0f,  1.0f, -1.0f}, glm::vec3{1.0f,  0.0f,  0.0f}, glm::vec2{1.0f, 1.0f}),       
+        Vertex(glm::vec3{ 1.0f, -1.0f, -1.0f}, glm::vec3{1.0f,  0.0f,  0.0f}, glm::vec2{0.0f, 1.0f}), 
+        Vertex(glm::vec3{ 1.0f,  1.0f,  1.0f}, glm::vec3{1.0f,  0.0f,  0.0f}, glm::vec2{1.0f, 0.0f}), 
+        Vertex(glm::vec3{ 1.0f, -1.0f,  1.0f}, glm::vec3{1.0f,  0.0f,  0.0f}, glm::vec2{0.0f, 0.0f}),     
                      
-		Vertex(glm::vec3{-1.0f, -1.0f, -1.0f}, glm::vec2{0.0f, 1.0f}, glm::vec3{0.0f, -1.0f,  0.0f}), 
-        Vertex(glm::vec3{ 1.0f, -1.0f, -1.0f}, glm::vec2{1.0f, 1.0f}, glm::vec3{0.0f, -1.0f,  0.0f}), 
-        Vertex(glm::vec3{ 1.0f, -1.0f,  1.0f}, glm::vec2{1.0f, 0.0f}, glm::vec3{0.0f, -1.0f,  0.0f}), 
-        Vertex(glm::vec3{ 1.0f, -1.0f,  1.0f}, glm::vec2{1.0f, 0.0f}, glm::vec3{0.0f, -1.0f,  0.0f}), 
-        Vertex(glm::vec3{-1.0f, -1.0f,  1.0f}, glm::vec2{0.0f, 0.0f}, glm::vec3{0.0f, -1.0f,  0.0f}), 
-        Vertex(glm::vec3{-1.0f, -1.0f, -1.0f}, glm::vec2{0.0f, 1.0f}, glm::vec3{0.0f, -1.0f,  0.0f}), 
+		Vertex(glm::vec3{-1.0f, -1.0f, -1.0f}, glm::vec3{0.0f, -1.0f,  0.0f}, glm::vec2{0.0f, 1.0f}), 
+        Vertex(glm::vec3{ 1.0f, -1.0f, -1.0f}, glm::vec3{0.0f, -1.0f,  0.0f}, glm::vec2{1.0f, 1.0f}), 
+        Vertex(glm::vec3{ 1.0f, -1.0f,  1.0f}, glm::vec3{0.0f, -1.0f,  0.0f}, glm::vec2{1.0f, 0.0f}), 
+        Vertex(glm::vec3{ 1.0f, -1.0f,  1.0f}, glm::vec3{0.0f, -1.0f,  0.0f}, glm::vec2{1.0f, 0.0f}), 
+        Vertex(glm::vec3{-1.0f, -1.0f,  1.0f}, glm::vec3{0.0f, -1.0f,  0.0f}, glm::vec2{0.0f, 0.0f}), 
+        Vertex(glm::vec3{-1.0f, -1.0f, -1.0f}, glm::vec3{0.0f, -1.0f,  0.0f}, glm::vec2{0.0f, 1.0f}), 
 
-		Vertex(glm::vec3{-1.0f,  1.0f, -1.0f}, glm::vec2{0.0f, 1.0f}, glm::vec3{0.0f,  1.0f,  0.0f}), 
-        Vertex(glm::vec3{ 1.0f,  1.0f,  1.0f}, glm::vec2{1.0f, 0.0f}, glm::vec3{0.0f,  1.0f,  0.0f}), 
-        Vertex(glm::vec3{ 1.0f,  1.0f, -1.0f}, glm::vec2{1.0f, 1.0f}, glm::vec3{0.0f,  1.0f,  0.0f}),   
-        Vertex(glm::vec3{ 1.0f,  1.0f,  1.0f}, glm::vec2{1.0f, 0.0f}, glm::vec3{0.0f,  1.0f,  0.0f}), 
-        Vertex(glm::vec3{-1.0f,  1.0f, -1.0f}, glm::vec2{0.0f, 1.0f}, glm::vec3{0.0f,  1.0f,  0.0f}), 
-        Vertex(glm::vec3{-1.0f,  1.0f,  1.0f}, glm::vec2{0.0f, 0.0f}, glm::vec3{ 0.0f,  1.0f,  0.0})
+		Vertex(glm::vec3{-1.0f,  1.0f, -1.0f}, glm::vec3{0.0f,  1.0f,  0.0f}, glm::vec2{0.0f, 1.0f}), 
+        Vertex(glm::vec3{ 1.0f,  1.0f,  1.0f}, glm::vec3{0.0f,  1.0f,  0.0f}, glm::vec2{1.0f, 0.0f}), 
+        Vertex(glm::vec3{ 1.0f,  1.0f, -1.0f}, glm::vec3{0.0f,  1.0f,  0.0f}, glm::vec2{1.0f, 1.0f}),   
+        Vertex(glm::vec3{ 1.0f,  1.0f,  1.0f}, glm::vec3{0.0f,  1.0f,  0.0f}, glm::vec2{1.0f, 0.0f}), 
+        Vertex(glm::vec3{-1.0f,  1.0f, -1.0f}, glm::vec3{0.0f,  1.0f,  0.0f}, glm::vec2{0.0f, 1.0f}), 
+        Vertex(glm::vec3{-1.0f,  1.0f,  1.0f}, glm::vec3{ 0.0f,  1.0f,  0.0}, glm::vec2{0.0f, 0.0f})
 	};
 
 	cube_ = std::make_unique<Mesh>(std::move(vertices));
@@ -123,25 +125,22 @@ void Environment::CreateQuad()
 {
     std::vector vertices
 	{
-        Vertex(glm::vec3{1.0f, 1.0f, 0.0f}, glm::vec2{1.0f, 1.0f}),
-		Vertex(glm::vec3{1.0f, -1.0f, 0.0f}, glm::vec2{1.0f, 0.0f}),
-		Vertex(glm::vec3{-1.0f, -1.0f, 0.0f}, glm::vec2{0.0f, 0.0f}),
-		Vertex(glm::vec3{-1.0f, 1.0f, 0.0f}, glm::vec2{0.0f, 1.0f})
+		Vertex(glm::vec3{-1.0f,  1.0f, 0.0f}, glm::vec3{0.0f, 0.0f, 1.0f}, glm::vec2{0.0f, 1.0f}),
+        Vertex(glm::vec3{ 1.0f,  1.0f, 0.0f}, glm::vec3{0.0f, 0.0f, 1.0f}, glm::vec2{1.0f, 1.0f}),
+        Vertex(glm::vec3{-1.0f, -1.0f, 0.0f}, glm::vec3{0.0f, 0.0f, 1.0f}, glm::vec2{0.0f, 0.0f}),
+                                                                                                          
+        Vertex(glm::vec3{-1.0f, -1.0f, 0.0f}, glm::vec3{0.0f, 0.0f, 1.0f}, glm::vec2{0.0f, 0.0f}),
+        Vertex(glm::vec3{ 1.0f,  1.0f, 0.0f}, glm::vec3{0.0f, 0.0f, 1.0f}, glm::vec2{1.0f, 1.0f}),
+        Vertex(glm::vec3{ 1.0f, -1.0f, 0.0f}, glm::vec3{0.0f, 0.0f, 1.0f}, glm::vec2{1.0f, 0.0f})
 	};
 
-	std::vector<unsigned> indices
-	{  
-	    0, 1, 3,
-	    1, 2, 3
-	};
-
-    quad_ = std::make_unique<Mesh>(std::move(vertices), std::move(indices));
+    quad_ = std::make_unique<Mesh>(vertices);
 }
 
 void Environment::RenderCubeMap(const glm::mat4& capture_projection, const glm::mat4 capture_views[6]) const
 {
 	cube_map_shader_->Bind();
-    cube_map_shader_->SetInt(0, "equirectangularMap");
+    cube_map_shader_->SetInt(1, "equirectangularMap");
     cube_map_shader_->SetMat4(capture_projection, "projection");
     glActiveTexture(GL_TEXTURE1);
     hdr_texture_->Bind();
@@ -162,16 +161,17 @@ void Environment::RenderCubeMap(const glm::mat4& capture_projection, const glm::
 
     cube_map_->Bind();
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+    cube_map_shader_->Unbind();
 }
 
 void Environment::RenderIrradianceMap(const glm::mat4& capture_projection, const glm::mat4 capture_views[6]) const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
     glBindRenderbuffer(GL_RENDERBUFFER, rbo_);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, Config::irradiance_scale, Config::irradiance_scale);
 
     irradiance_shader_->Bind();
-    irradiance_shader_->SetInt(0, "environmentMap");
+    irradiance_shader_->SetInt(1, "environmentMap");
     irradiance_shader_->SetMat4(capture_projection, "projection");
 
     glActiveTexture(GL_TEXTURE1);
@@ -191,11 +191,11 @@ void Environment::RenderIrradianceMap(const glm::mat4& capture_projection, const
 		cube_->Unbind();
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    irradiance_shader_->Unbind();
 }
 
 void Environment::RenderPrefilterMap(const glm::mat4& capture_projection, const glm::mat4 capture_views[6]) const
 {
-    prefilter_map_->Bind();
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
     prefilter_shader_->Bind();
@@ -231,11 +231,11 @@ void Environment::RenderPrefilterMap(const glm::mat4& capture_projection, const 
         }
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    prefilter_shader_->Unbind();
 }
 
 void Environment::RenderBrdfLut() const
 {
-    brdf_lut_->Bind();
     glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
     glBindRenderbuffer(GL_RENDERBUFFER, rbo_);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, Config::cube_map_size, Config::cube_map_size);
@@ -251,4 +251,5 @@ void Environment::RenderBrdfLut() const
     quad_->Unbind();
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    brdf_shader_->Unbind();
 }

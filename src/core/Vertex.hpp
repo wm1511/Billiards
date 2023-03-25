@@ -4,8 +4,8 @@
 struct Vertex
 {
 	glm::vec3 position;
-	glm::vec2 uv;
 	glm::vec3 normal;
+	glm::vec2 uv;
 	int material_id;
 
 	bool operator==(const Vertex& other) const
