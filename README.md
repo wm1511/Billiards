@@ -3,10 +3,9 @@
 ## Do zrobienia
 
 ### Grafika:
-- Zrobić mapowanie HDR lub pokój jako model
-- Dodać cienie
 - Zrobić ustawianie kija i kamery względem białej
-Podzielić przeszkody na kształty (trójkąty)
+- Poprawić mapowanie UV metalowych części stołu
+- Naprawić odbicia przy IBL
 
 ### Fizyka:
 - Wszystko

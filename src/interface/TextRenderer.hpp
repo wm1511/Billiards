@@ -34,8 +34,6 @@ public:
 
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-
-		text_shader_->Unbind();
 	}
 
 private:

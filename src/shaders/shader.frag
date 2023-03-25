@@ -30,44 +30,16 @@ struct Light
     vec3 color;
 };
 
-uniform samplerCube depthMap;
+uniform samplerCube irradianceMap;
+uniform samplerCube prefilterMap;
+uniform sampler2D brdfLUT;
+
 uniform int lightCount;
 uniform Light lights[4];
 uniform vec3 cameraPos;
 uniform Material material;
-uniform float far_plane;
 
 const float PI = 3.14159265359;
-
-vec3 gridSamplingDisk[20] = vec3[]
-(
-   vec3(1, 1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1, 1,  1), 
-   vec3(1, 1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
-   vec3(1, 1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1, 1,  0),
-   vec3(1, 0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1, 0, -1),
-   vec3(0, 1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0, 1, -1)
-);
-
-float ShadowCalculation(vec3 fragPos, vec3 lightPos)
-{
-    vec3 fragToLight = Position - lightPos;
-    float currentDepth = length(fragToLight);
-    float shadow = 0.0;
-    float bias = 0.15;
-    int samples = 20;
-    float viewDistance = length(cameraPos - Position);
-    float diskRadius = (1.0 + (viewDistance / far_plane)) / 25.0;
-    for(int i = 0; i < samples; ++i)
-    {
-        float closestDepth = texture(depthMap, fragToLight + gridSamplingDisk[i] * diskRadius).r;
-        closestDepth *= far_plane;
-
-        if(currentDepth - bias > closestDepth)
-            shadow += 1.0;
-    }
-    shadow /= float(samples);
-    return shadow;
-}
 
 vec3 getNormalFromMap()
 {
@@ -126,6 +98,11 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
 
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
+{
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+}   
+
 void main()
 {
     vec3 diffuse = pow(material.diffuse, vec3(2.2));
@@ -150,6 +127,7 @@ void main()
         N = getNormalFromMap();
 
     vec3 V = normalize(cameraPos - Position);
+    vec3 R = reflect(-V, N); 
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, diffuse, metallic);
@@ -177,12 +155,24 @@ void main()
 
         float NdotL = max(dot(N, L), 0.0);        
 
-        float shadow = ShadowCalculation(Position, lights[i].position);
-
-        Lo += (1.0 - shadow) * (kD * diffuse / PI + specular) * radiance * NdotL;
+        Lo += (kD * diffuse / PI + specular) * radiance * NdotL;
     }   
+
+    vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
+
+    vec3 kS = F;
+    vec3 kD = 1.0 - kS;
+    kD *= 1.0 - metallic;
+
+    vec3 irradiance = texture(irradianceMap, N).rgb;
+    diffuse = irradiance * diffuse;
+
+    const float MAX_REFLECTION_LOD = 4.0;
+    vec3 prefilteredColor = textureLod(prefilterMap, R, roughness * MAX_REFLECTION_LOD).rgb;    
+    vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
+    vec3 specular = prefilteredColor * (F * brdf.x + brdf.y);
     
-    vec3 ambient = diffuse * vec3(0.03) * ao;
+    vec3 ambient = (kD * diffuse + specular) * ao;
     
     vec3 color = ambient + Lo;
 

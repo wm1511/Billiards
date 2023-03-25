@@ -7,24 +7,20 @@ Object::Object(const std::string& path)
 	Loader::LoadModel(path, meshes_, materials_);
 }
 
-void Object::Draw(const std::shared_ptr<Shader>& shader, const unsigned type) const
+void Object::Draw(const std::shared_ptr<Shader>& shader) const
 {
-	shader->Bind();
-
 	shader->SetMat4(GetModelMatrix(), "modelMatrix");
 
 	for (const auto& mesh : meshes_)
 	{
 		const auto material = materials_[mesh->GetMaterialId()];
 
-		material->Bind(shader, type);
+		material->Bind(shader);
 		mesh->Bind();
 		mesh->Draw();
 		mesh->Unbind();
 		material->Unbind(shader);
 	}
-
-	shader->Unbind();
 }
 
 void Object::Translate(const glm::vec3& translation)

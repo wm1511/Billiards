@@ -31,10 +31,7 @@ void TextRenderer::UpdateProjectionMatrix(const int width, const int height)
 void TextRenderer::Update() const
 {
 	text_shader_->Bind();
-
 	text_shader_->SetMat4(projection_matrix_, "projectionMatrix");
-
-	text_shader_->Unbind();
 }
 
 void TextRenderer::RenderCharacter(float& x, float& y, const char character)
@@ -68,8 +65,6 @@ void TextRenderer::RenderCharacter(float& x, float& y, const char character)
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	ch.texture->Unbind();
-
 	x += (ch.advance >> 6) * scale_.x;
 }
 
@@ -96,7 +91,7 @@ void TextRenderer::Load()
 			[[unlikely]] throw std::exception(std::string("Failed to load glyph \'" + i + '\'').c_str());
 
 		auto character = Character(
-			std::make_unique<Texture>(face->glyph->bitmap.buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows, 1, false),
+			std::make_unique<Texture>(face->glyph->bitmap.buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows, 1),
 			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
 			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
 			static_cast<unsigned>(face->glyph->advance.x));

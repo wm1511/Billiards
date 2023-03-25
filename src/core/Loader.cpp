@@ -35,13 +35,40 @@ std::shared_ptr<Texture> Loader::LoadTexture(const std::string& path)
 	if (unique_textures_.contains(path))
 		return unique_textures_[path];
 
-	unsigned char* image_data;
 	int channels, width, height;
+	const auto image_path = std::filesystem::current_path() / "assets/textures" / path;
 
-	LoadImage(path, image_data, width, height, channels);
+	if (!stbi_info(image_path.string().c_str(), &width, &height, &channels))
+		[[unlikely]] throw std::exception(std::string(path + " cannot be found or loaded as an image").c_str());
+
+	unsigned char* image_data = stbi_load(image_path.string().c_str(), &width, &height, &channels, 0);
 
 	const auto texture = std::make_shared<Texture>(image_data, width, height, channels);
+
+	stbi_image_free(image_data);
+
 	unique_textures_.insert({ path, texture });
+	return texture;
+}
+
+std::shared_ptr<Texture> Loader::LoadEnvironment(const std::string& path)
+{
+	int channels, width, height;
+	const auto image_path = std::filesystem::current_path() / "assets/hdr" / path;
+
+	stbi_set_flip_vertically_on_load(true);
+
+	if (!stbi_info(image_path.string().c_str(), &width, &height, &channels))
+		[[unlikely]] throw std::exception(std::string(path + " cannot be found or loaded as an HDR image").c_str());
+
+	float* hdr_data = stbi_loadf(image_path.string().c_str(), &width, &height, &channels, 3);
+
+	stbi_set_flip_vertically_on_load(false);
+
+	const auto texture = std::make_shared<Texture>(hdr_data, width, height);
+
+	stbi_image_free(hdr_data);
+
 	return texture;
 }
 
@@ -118,25 +145,4 @@ void Loader::LoadMeshes(std::vector<std::shared_ptr<Mesh>>& meshes, const std::v
 
 		meshes.push_back(std::make_shared<Mesh>(vertices, indices, shape.mesh.material_ids[0]));
 	}
-}
-
-void Loader::LoadImage(const std::string& path, unsigned char*& image_data, int& width, int& height, int& channels)
-{
-	const auto image_path = std::filesystem::current_path() / "assets/textures" / path;
-
-	if (!stbi_info(image_path.string().c_str(), &width, &height, &channels))
-		[[unlikely]] throw std::exception(std::string(path + " cannot be found or loaded as an image").c_str());
-
-	image_data = stbi_load(image_path.string().c_str(), &width, &height, &channels, 0);
-}
-
-void Loader::LoadHdr(const std::string& path, float*& hdr_data, int& width, int& height)
-{
-	int channels{};
-	const auto image_path = std::filesystem::current_path() / "assets/hdr" / path;
-
-	if (!stbi_info(image_path.string().c_str(), &width, &height, &channels))
-		[[unlikely]] throw std::exception(std::string(path + " cannot be found or loaded as an HDR image").c_str());
-
-	hdr_data = stbi_loadf(image_path.string().c_str(), &width, &height, &channels, 3);
 }

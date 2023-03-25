@@ -31,33 +31,35 @@ void Camera::UpdateProjectionMatrix(const int width, const int height)
 	projection_matrix_ = glm::perspective(Config::fov, static_cast<float>(width) / static_cast<float>(height), Config::near_clip, Config::far_clip);
 }
 
-void Camera::Update(const std::shared_ptr<Shader>& shader) const
+void Camera::UpdateMain(const std::shared_ptr<Shader>& main_shader) const
 {
-	shader->Bind();
+	main_shader->SetMat4(view_matrix_, "viewMatrix");
+    main_shader->SetMat4(projection_matrix_, "projectionMatrix");
+    main_shader->SetVec3(position_, "cameraPos");
 
 	for (int i = 0; i < Config::light_count; i++)
 	{
-		shader->SetVec3(glm::vec3(20.0f), std::string("lights[") + std::to_string(i) + "].color");
-		shader->SetVec3(glm::vec3(-2.0f + 2.0f * i, 2.0f, 0.0f), std::string("lights[") + std::to_string(i) + "].position");
+		const float light_position_x = i % 2 ? 2.0f * i : -2.0f * i;
+		main_shader->SetVec3(glm::vec3(20.0f), std::string("lights[") + std::to_string(i) + "].color");
+		main_shader->SetVec3(glm::vec3(light_position_x, 2.0f, 0.0f), std::string("lights[") + std::to_string(i) + "].position");
 	}
 
-	if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_SPACE) == GLFW_PRESS)
+	if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 	{
-		shader->SetVec3(glm::vec3(10.0f), std::string("lights[") + std::to_string(Config::light_count) + "].color");
-		shader->SetVec3(position_, std::string("lights[") + std::to_string(Config::light_count) + "].position");
-		shader->SetInt(Config::light_count + 1, "lightCount");
+		main_shader->SetVec3(glm::vec3(10.0f), std::string("lights[") + std::to_string(Config::light_count) + "].color");
+		main_shader->SetVec3(position_, std::string("lights[") + std::to_string(Config::light_count) + "].position");
+		main_shader->SetInt(Config::light_count + 1, "lightCount");
 	}
 	else
 	{
-		shader->SetInt(Config::light_count, "lightCount");
+		main_shader->SetInt(Config::light_count, "lightCount");
 	}
+}
 
-	shader->SetMat4(view_matrix_, "viewMatrix");
-    shader->SetMat4(projection_matrix_, "projectionMatrix");
-    shader->SetVec3(position_, "cameraPos");
-	shader->SetFloat(Config::far_clip, "far_plane");
-
-	shader->Unbind();
+void Camera::UpdateBackground(const std::shared_ptr<Shader>& background_shader) const
+{
+	background_shader->SetMat4(view_matrix_, "viewMatrix");
+	background_shader->SetMat4(projection_matrix_, "projectionMatrix");
 }
 
 void Camera::Move(GLFWwindow* window, const glm::vec3& direction, const float factor)
@@ -90,7 +92,8 @@ void Camera::Move(GLFWwindow* window, const glm::vec3& direction, const float fa
 		position_ -= up * factor;
 	}
 
-	position_ = glm::clamp(position_, Config::camera_min_position, Config::camera_max_position);
+	if (Config::bound_camera)
+		position_ = glm::clamp(position_, Config::camera_min_position, Config::camera_max_position);
 }
 
 void Camera::Rotate(GLFWwindow* window, const float factor)

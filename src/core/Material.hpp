@@ -6,7 +6,7 @@
 
 struct Material
 {
-	void Bind(const std::shared_ptr<Shader>& shader, unsigned type = GL_TEXTURE_2D) const;
+	void Bind(const std::shared_ptr<Shader>& shader) const;
 	void Unbind(const std::shared_ptr<Shader>& shader) const;
 
 	glm::vec3 diffuse{0.0f};

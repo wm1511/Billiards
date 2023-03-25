@@ -26,7 +26,7 @@ void Window::KeyPressedCallback(GLFWwindow* window, const int key, int, const in
 	{
 		if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED && key == GLFW_KEY_ESCAPE)
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		else if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL && key == GLFW_KEY_ENTER)
+		else if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL && key == GLFW_KEY_SPACE)
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 }
@@ -64,4 +64,6 @@ void Window::Init()
 	glfwSetWindowUserPointer(window_, this);
 	glfwSetWindowSizeCallback(window_, FramebufferResizeCallback);
 	glfwSetKeyCallback(window_, KeyPressedCallback);
+
+	glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }

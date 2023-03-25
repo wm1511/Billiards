@@ -10,7 +10,7 @@ public:
 	Object() = default;
 	explicit Object(const std::string& path);
 
-	virtual void Draw(const std::shared_ptr<Shader>& shader, unsigned type = GL_TEXTURE_2D) const;
+	virtual void Draw(const std::shared_ptr<Shader>& shader) const;
 	void Translate(const glm::vec3& translation);
 	void Scale(const glm::vec3& scale);
 	void Rotate(const glm::vec3& rotation);

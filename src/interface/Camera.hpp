@@ -9,7 +9,8 @@ public:
 	void Init();
 	void UpdateViewMatrix(float frame_time);
 	void UpdateProjectionMatrix(int width, int height);
-	void Update(const std::shared_ptr<Shader>& shader) const;
+	void UpdateMain(const std::shared_ptr<Shader>& main_shader) const;
+	void UpdateBackground(const std::shared_ptr<Shader>& background_shader) const;
 
 private:
 	void Move(GLFWwindow* window, const glm::vec3& direction, float factor);

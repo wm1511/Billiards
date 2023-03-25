@@ -66,7 +66,7 @@
     <ClCompile Include="src\objects\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\objects\CubeMap.cpp">
+    <ClCompile Include="src\objects\Environment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -131,7 +131,7 @@
     <ClInclude Include="src\objects\Hole.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\objects\CubeMap.hpp">
+    <ClInclude Include="src\objects\Environment.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -140,8 +140,13 @@
     <None Include="src\shaders\shader.vert" />
     <None Include="src\shaders\text.frag" />
     <None Include="src\shaders\text.vert" />
-    <None Include="src\shaders\shadow.frag" />
-    <None Include="src\shaders\shadow.geom" />
-    <None Include="src\shaders\shadow.vert" />
+    <None Include="src\shaders\background.frag" />
+    <None Include="src\shaders\background.vert" />
+    <None Include="src\shaders\brdf.frag" />
+    <None Include="src\shaders\brdf.vert" />
+    <None Include="src\shaders\cubemap.frag" />
+    <None Include="src\shaders\cubemap.vert" />
+    <None Include="src\shaders\irradiance.frag" />
+    <None Include="src\shaders\prefilter.frag" />
   </ItemGroup>
 </Project>
