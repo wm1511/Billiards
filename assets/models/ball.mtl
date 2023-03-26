@@ -4,5 +4,5 @@
 newmtl Ball
 map_Kd ball0.jpg
 Ka 1.0
-Pr 0.2
+Pr 0.15
 Pm 0.0

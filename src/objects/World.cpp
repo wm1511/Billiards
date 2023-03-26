@@ -24,6 +24,35 @@ void World::Draw(const std::shared_ptr<Shader>& shader) const
 		ball->Draw(shader);
 }
 
+float power = 40;
+float angle = 0.5f;
+bool isShot = true;
+void World::Update(const float dt) const
+{
+	isShot = false;
+	if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_F) == GLFW_PRESS)
+		isShot = true;
+
+	if (isShot)
+		balls_[0]->Shot(power, angle);
+	balls_[0]->Roll(dt, 0);
+	//balls_[0]->Roll(dt, chuj);
+	/*float normalForce = Config::gravity_acc * Ball::mass;
+	float frictionForce = Config::friction_coeff * normalForce;
+	float acc = (force - frictionForce) / Ball::mass;
+	balls_[0]->velocity += acc * dt * 0.00001f;
+	balls_[0]->angular_velocity = balls_[0]->velocity / Ball::radius_;
+
+	if (balls_[0]->velocity <= 0)
+	{
+		balls_[0]->velocity = 0;
+	}
+
+	balls_[0]->Translate(glm::vec3(-balls_[0]->velocity, 0, 0));
+	balls_[0]->Rotate(glm::vec3(0, 0, balls_[0]->angular_velocity));
+	force -= force * dt;*/
+}
+
 void World::Init() const
 {
 	cue_->Translate(glm::vec3(-0.4f, Ball::radius_, 0.0f));

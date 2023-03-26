@@ -15,9 +15,9 @@ struct Config
 	inline static constexpr float near_clip = 0.001f;
 	inline static constexpr float far_clip = 1000.0f;
 	inline static constexpr float movement_speed = 2.0f;
-	inline static constexpr float rotation_speed = 0.02f;
-	inline static constexpr glm::vec3 camera_min_position = {-2.75f, 0.5f, -1.5f};
-	inline static constexpr glm::vec3 camera_max_position = {2.75f, 2.5f, 1.5f};
+	inline static constexpr float rotation_speed = 0.05f;
+	inline static constexpr glm::vec3 camera_min_position = { -2.75f, 0.5f, -1.5f };
+	inline static constexpr glm::vec3 camera_max_position = { 2.75f, 2.5f, 1.5f };
 
 	// Shaders
 	inline static constexpr const char* const vertex_path = "shader.vert";
