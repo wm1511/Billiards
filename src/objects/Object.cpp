@@ -7,7 +7,7 @@ Object::Object(const std::string& path)
 	Loader::LoadModel(path, meshes_, materials_);
 }
 
-void Object::Draw(const std::shared_ptr<Shader>& shader) const
+void Object::Draw(const std::shared_ptr<Shader>& shader)
 {
 	shader->Bind();
 
@@ -37,13 +37,14 @@ void Object::Scale(const glm::vec3& scale)
 	scale_ *= scale;
 }
 
-void Object::Rotate(const glm::vec3& rotation)
+void Object::Rotate(const glm::vec3& rotation_axis, float angle)
 {
-	rotation_ += rotation;
-	rotation_ = glm::mod(rotation_, glm::two_pi<float>());
+	rotation_axis_ = rotation_axis;
+	rotation_axis_ = glm::mod(rotation_axis_, glm::two_pi<float>());
+	angle_ += angle;
 }
 
-glm::mat4 Object::GetModelMatrix() const
+glm::mat4 Object::GetModelMatrix() 
 {
 	auto model_matrix = glm::mat4(1.0f);
 
@@ -53,8 +54,9 @@ glm::mat4 Object::GetModelMatrix() const
 	if (glm::length(scale_) > Config::min_change)
 		model_matrix *= glm::scale(model_matrix, scale_);
 
-	if (glm::length(rotation_) > Config::min_change)
-		model_matrix *= glm::toMat4(glm::quat(rotation_));
+	if (angle_ > Config::min_change)
+		model_matrix *= glm::rotate(model_matrix, angle_, rotation_axis_);
+	angle_ = 0.0f;
 
 	return model_matrix;
 }

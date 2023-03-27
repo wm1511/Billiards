@@ -8,7 +8,7 @@ class World
 {
 public:
 	World();
-
+	void Update(const float dt) const;
 	void Draw(const std::shared_ptr<Shader>& shader) const;
 	void Init() const;
 	

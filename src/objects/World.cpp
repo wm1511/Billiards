@@ -24,7 +24,7 @@ void World::Draw(const std::shared_ptr<Shader>& shader) const
 		ball->Draw(shader);
 }
 
-float power = 40;
+float power = -10;
 float angle = 0.5f;
 bool isShot = true;
 void World::Update(const float dt) const
@@ -35,7 +35,7 @@ void World::Update(const float dt) const
 
 	if (isShot)
 		balls_[0]->Shot(power, angle);
-	balls_[0]->Roll(dt, 0);
+	balls_[0]->Roll(dt);
 	//balls_[0]->Roll(dt, chuj);
 	/*float normalForce = Config::gravity_acc * Ball::mass;
 	float frictionForce = Config::friction_coeff * normalForce;

@@ -10,3 +10,24 @@ Ball::Ball(const int number) : Object(Config::ball_path)
 	const auto path = std::filesystem::current_path() / ("assets/textures/ball" + std::to_string(number) + ".jpg");
 	materials_[0]->diffuse_texture = Loader::LoadTexture(path.string());
 }
+
+void Ball::Shot(const float power, float angle)
+{
+	velocity = glm::vec3(power * cos(angle), 0, power * sin(angle));
+}
+
+void Ball::Roll(const float dt)
+{
+	Translate(velocity * dt);
+	glm::vec3 up(0, 1, 0);
+	auto chuj = glm::cross(up, glm::normalize(velocity));
+	float chuj1 = glm::length(velocity) * dt / radius_;
+
+	Rotate(chuj, chuj1);
+
+
+	velocity *= 0.98f;
+
+}
+
+
