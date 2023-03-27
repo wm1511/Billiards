@@ -1,4 +1,5 @@
-#include "objects/Boundary.hpp"
+#include "stdafx.h"
+#include "Boundary.hpp"
 
 Boundary::Boundary()
 {

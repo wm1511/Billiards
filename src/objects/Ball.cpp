@@ -19,15 +19,13 @@ void Ball::Shot(const float power, float angle)
 void Ball::Roll(const float dt)
 {
 	Translate(velocity * dt);
+
 	glm::vec3 up(0, 1, 0);
-	auto chuj = glm::cross(up, glm::normalize(velocity));
-	float chuj1 = glm::length(velocity) * dt / radius_;
-
-	Rotate(chuj, chuj1);
-
+	auto rotation_axis = glm::cross(up, glm::normalize(velocity));
+	float rotation_angle = glm::length(velocity) * dt / radius_;
+	Rotate(rotation_axis, rotation_angle);
 
 	velocity *= 0.98f;
-
 }
 
 

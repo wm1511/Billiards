@@ -15,5 +15,5 @@ public:
 private:
 	std::shared_ptr<Table> table_ = nullptr;
 	std::shared_ptr<Cue> cue_ = nullptr;
-	std::vector<std::shared_ptr<Ball>> balls_{};
+	std::vector<std::shared_ptr<Ball>> ball{};
 };

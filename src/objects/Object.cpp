@@ -40,23 +40,22 @@ void Object::Scale(const glm::vec3& scale)
 void Object::Rotate(const glm::vec3& rotation_axis, float angle)
 {
 	rotation_axis_ = rotation_axis;
-	rotation_axis_ = glm::mod(rotation_axis_, glm::two_pi<float>());
+	//rotation_axis_ = glm::mod(rotation_axis_, glm::two_pi<float>());
 	angle_ += angle;
 }
 
-glm::mat4 Object::GetModelMatrix() 
+glm::mat4 Object::GetModelMatrix()
 {
 	auto model_matrix = glm::mat4(1.0f);
 
 	if (glm::length(translation_) > Config::min_change)
-		model_matrix *= glm::translate(model_matrix, translation_);
+		model_matrix = glm::translate(model_matrix, translation_);
 
 	if (glm::length(scale_) > Config::min_change)
-		model_matrix *= glm::scale(model_matrix, scale_);
+		model_matrix = glm::scale(model_matrix, scale_);
 
 	if (angle_ > Config::min_change)
-		model_matrix *= glm::rotate(model_matrix, angle_, rotation_axis_);
-	angle_ = 0.0f;
+		model_matrix = glm::rotate(model_matrix, angle_, rotation_axis_);
 
 	return model_matrix;
 }
