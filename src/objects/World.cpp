@@ -33,9 +33,9 @@ void World::Update(const float dt) const
 	if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_F) == GLFW_PRESS)
 		isShot = true;
 
-	if (isShot)
-		balls_[0]->Shot(power, angle);
-	balls_[0]->Roll(dt, 0);
+	// if (isShot)
+	// 	balls_[0]->Shot(power, angle);
+	// balls_[0]->Roll(dt, 0);
 	//balls_[0]->Roll(dt, chuj);
 	/*float normalForce = Config::gravity_acc * Ball::mass;
 	float frictionForce = Config::friction_coeff * normalForce;

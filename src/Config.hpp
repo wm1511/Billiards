@@ -10,7 +10,7 @@ struct Config
 	inline static constexpr const char* const window_name = "Billiards";
 
 	// Camera
-	inline static constexpr bool bound_camera = true;
+	inline static constexpr bool bound_camera = false;
 	inline static constexpr float fov = 1.3f;
 	inline static constexpr float near_clip = 0.001f;
 	inline static constexpr float far_clip = 1000.0f;
