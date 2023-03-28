@@ -40,7 +40,7 @@ void Object::Scale(const glm::vec3& scale)
 void Object::Rotate(const glm::vec3& rotation_axis, float angle)
 {
 	rotation_axis_ = rotation_axis;
-	//rotation_axis_ = glm::mod(rotation_axis_, glm::two_pi<float>());
+	angle_ = glm::mod(angle_, glm::two_pi<float>());
 	angle_ += angle;
 }
 

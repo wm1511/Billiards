@@ -13,7 +13,7 @@ public:
 	inline static constexpr float radius_{ 0.0286f };
 
 	glm::vec3 velocity{ 0 };
-	glm::vec3 angular_velocity{ 0 };
+	bool isShot{ 0 };
 
 private:
 };

@@ -26,6 +26,9 @@ void Ball::Roll(const float dt)
 	Rotate(rotation_axis, rotation_angle);
 
 	velocity *= 0.98f;
+
+	if (glm::length(velocity) <= std::numeric_limits<float>::epsilon())
+		velocity *= 0;
 }
 
 

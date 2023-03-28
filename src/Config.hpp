@@ -34,7 +34,7 @@ struct Config
 	inline static constexpr const char* const prefilter_fragment_path = "prefilter.frag";
 
 	// Model
-	inline static constexpr float min_change = 0.01f;
+	inline static constexpr float min_change = 0.001f;
 	inline static constexpr const char* const table_path = "table.obj";
 	inline static constexpr const char* const cue_path = "cue.obj";
 	inline static constexpr const char* const ball_path = "ball.obj";

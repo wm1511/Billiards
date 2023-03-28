@@ -20,8 +20,8 @@ public:
 	glm::vec3 rotation_axis_{ 0.0f, 0.0f, 0.0f };
 	float angle_{ 0.0f };
 
-protected:
 	[[nodiscard]] glm::mat4 GetModelMatrix();
+protected:
 
 	std::vector<std::shared_ptr<Material>> materials_{};
 	std::vector<std::shared_ptr<Mesh>> meshes_{}; //:)
