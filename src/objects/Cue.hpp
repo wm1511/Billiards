@@ -5,7 +5,8 @@ class Cue final : public Object
 {
 public:
 	Cue();
-	void Strike(const std::shared_ptr<Ball>& ball, glm::vec3 power);
+
+	bool power_changed_{false};
 
 private:
 

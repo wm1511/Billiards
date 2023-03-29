@@ -37,7 +37,7 @@ void Object::Scale(const glm::vec3& scale)
 	scale_ *= scale;
 }
 
-void Object::Rotate(const glm::vec3& rotation_axis, float angle)
+void Object::Rotate(const glm::vec3& rotation_axis, const float angle)
 {
 	if (glm::length(rotation_axis) != 0)
 	{
@@ -48,7 +48,7 @@ void Object::Rotate(const glm::vec3& rotation_axis, float angle)
 	else return;
 }
 
-glm::mat4 Object::GetModelMatrix()
+glm::mat4 Object::GetModelMatrix() const
 {
 	auto model_matrix = glm::mat4(1.0f);
 

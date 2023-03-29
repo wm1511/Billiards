@@ -3,9 +3,12 @@
 ## Do zrobienia
 
 ### Grafika:
-- Zrobić ustawianie kija względem białej
+
 
 ### Fizyka:
-- Wszystko
+- Płynna zmiana kierunku obrotu bil
+- Dołki
+- Podnoszenie kija (żeby nie wchodził w stół)
 
 ### Organizacja kodu:
+- ściśle tajna organizacja
