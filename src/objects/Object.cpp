@@ -37,14 +37,14 @@ void Object::Scale(const glm::vec3& scale)
 	scale_ *= scale;
 }
 
-void Object::Rotate(const glm::vec3& rotation_axis, float angle)
+void Object::Rotate(const glm::vec3& rotation_axis, const float angle)
 {
 	rotation_axis_ = rotation_axis;
 	angle_ = glm::mod(angle_, glm::two_pi<float>());
 	angle_ += angle;
 }
 
-glm::mat4 Object::GetModelMatrix()
+glm::mat4 Object::GetModelMatrix() const
 {
 	auto model_matrix = glm::mat4(1.0f);
 

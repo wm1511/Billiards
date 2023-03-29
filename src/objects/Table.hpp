@@ -8,8 +8,7 @@ class Table final : public Object
 {
 public:
 	Table();
-	void HandleCollision(const std::shared_ptr<Ball>& ball);
-
+	void HandleCollision(const std::shared_ptr<Ball>& ball) const;
 
 private:
 	inline static constexpr float bound_x_ = 1.35f - Ball::radius_ - 0.042f;

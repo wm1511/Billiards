@@ -8,10 +8,11 @@ class World
 {
 public:
 	World();
-	void Update(const float dt) const;
+	void Update(float dt) const;
 	void Draw(const std::shared_ptr<Shader>& shader) const;
 	void Init() const;
-	void KeyListener(const float dt) const;
+	void KeyListener() const;
+	[[nodiscard]] bool AreBallsInMotion() const;
 
 private:
 	std::shared_ptr<Table> table_ = nullptr;

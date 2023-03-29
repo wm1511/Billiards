@@ -13,14 +13,14 @@ public:
 	virtual void Draw(const std::shared_ptr<Shader>& shader);
 	void Translate(const glm::vec3& translation);
 	void Scale(const glm::vec3& scale);
-	void Rotate(const glm::vec3& rotation, float angle);
+	void Rotate(const glm::vec3& rotation_axis, float angle);
 
 	glm::vec3 translation_{ 0.0f, 0.0f, 0.0f };
 	glm::vec3 scale_{ 1.0f, 1.0f, 1.0f };
 	glm::vec3 rotation_axis_{ 0.0f, 0.0f, 0.0f };
 	float angle_{ 0.0f };
 
-	[[nodiscard]] glm::mat4 GetModelMatrix();
+	[[nodiscard]] glm::mat4 GetModelMatrix() const;
 protected:
 
 	std::vector<std::shared_ptr<Material>> materials_{};
