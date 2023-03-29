@@ -12,5 +12,6 @@ public:
 
 
 private:
-
+	inline static constexpr float bound_x_ = 1.35f - Ball::radius_ - 0.042f;
+	inline static constexpr float bound_z_ = 0.7f - Ball::radius_ - 0.042f;
 };

@@ -7,13 +7,12 @@ public:
 	Ball();
 	explicit Ball(int number);
 
-	void Shot(const float power, float angle);
+	void Shot(glm::vec3 power);
 	void Roll(const float dt);
 
 	inline static constexpr float radius_{ 0.0286f };
 
 	glm::vec3 velocity{ 0 };
-	bool isShot{ 0 };
 
 private:
 };

@@ -21,19 +21,9 @@ void World::Draw(const std::shared_ptr<Shader>& shader) const
 		ball->Draw(shader);
 }
 
-float power = 70;
-float angle = 0.8f;
-bool isShot = true;
 void World::Update(const float dt) const
 {
-	isShot = false;
-	if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_F) == GLFW_PRESS)
-		isShot = true;
-
 	KeyListener(dt);
-
-	if (isShot)
-		balls_[0]->Shot(power, angle);
 	balls_[0]->Roll(dt);
 	table_->HandleCollision(balls_[0]);
 }
@@ -41,11 +31,12 @@ void World::Update(const float dt) const
 void World::KeyListener(const float dt) const
 {
 	auto ctx = glfwGetCurrentContext();
-	//auto chuj = glm::vec3(balls_[0]->translation_.x, 1, balls_[0]->translation_.z);
+	auto cue_direction = glm::vec3(sin(cue_->angle_), 0, cos(cue_->angle_));
+
 	auto up = glm::vec3(0, 1, 0);
-	auto dir = glm::vec3(cos(cue_->angle_), 0, sin(cue_->angle_));
-	auto temp = glm::vec4(1.0f);
-	cue_->power_ = 0.015f;
+	auto power_vector = glm::cross(cue_direction, up);
+	auto power = glm::distance(cue_->translation_, balls_[0]->translation_);
+
 
 	if (glfwGetKey(ctx, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
@@ -61,22 +52,22 @@ void World::KeyListener(const float dt) const
 
 	if (glfwGetKey(ctx, GLFW_KEY_UP) == GLFW_PRESS)
 	{
-		//cue_->power_ += 0.001f;
-		cue_->Translate(0.01f);
-
+		if (power > Ball::radius_)
+			cue_->Translate(-power_vector * 0.01f);
 	}
-	////cue_->Translate(glm::vec3(cos(cue_->angle_), 0, sin(cue_->angle_)) * 0.001f);
 
 	if (glfwGetKey(ctx, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
-		//cue_->power_ -= 0.001f;
-		cue_->Translate(-dir * cue_->power_);
+		if (power <= 0.5f)
+			cue_->Translate(power_vector * 0.01f);
 	}
-	//cue_->power_ -= 0.001f;
-	//cue_->Translate(-glm::vec3(cos(cue_->angle_), 0, sin(cue_->angle_)) * 0.001f);
 
-
-
+	//STRIKE
+	if (glfwGetKey(ctx, GLFW_KEY_F) == GLFW_PRESS)
+	{
+		power *= 100;
+		cue_->Strike(balls_[0], -power_vector * power);
+	}
 }
 
 void World::Init() const

@@ -11,9 +11,9 @@ Ball::Ball(const int number) : Object(Config::ball_path)
 	materials_[0]->diffuse_texture = Loader::LoadTexture(path.string());
 }
 
-void Ball::Shot(const float power, float angle)
+void Ball::Shot(glm::vec3 power)
 {
-	velocity = glm::vec3(power * cos(angle), 0, power * sin(angle));
+	velocity = power;
 }
 
 void Ball::Roll(const float dt)
@@ -25,7 +25,7 @@ void Ball::Roll(const float dt)
 	float rotation_angle = glm::length(velocity) * dt / radius_;
 	Rotate(rotation_axis, rotation_angle);
 
-	velocity *= 0.98f;
+	velocity *= 0.985f;
 
 	if (glm::length(velocity) <= std::numeric_limits<float>::epsilon())
 		velocity *= 0;
