@@ -21,14 +21,16 @@ void Ball::Roll(const float dt)
 	Translate(velocity * dt);
 
 	glm::vec3 up(0, 1, 0);
-	auto rotation_axis = glm::cross(up, glm::normalize(velocity));
+	auto rotation_axis = glm::length(velocity) != 0 ? glm::cross(up, glm::normalize(velocity)) : glm::vec3(0, 0, 0);
 	float rotation_angle = glm::length(velocity) * dt / radius_;
 	Rotate(rotation_axis, rotation_angle);
 
 	velocity *= 0.985f;
 
-	if (glm::length(velocity) <= std::numeric_limits<float>::epsilon())
+	if (glm::length(velocity) <= 0.01f)
+	{
 		velocity *= 0;
+	}
 }
 
 

@@ -37,16 +37,17 @@ void World::KeyListener(const float dt) const
 	auto power_vector = glm::cross(cue_direction, up);
 	auto power = glm::distance(cue_->translation_, balls_[0]->translation_);
 
+	auto white_ball_dir = balls_[0]->translation_;
 
 	if (glfwGetKey(ctx, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		cue_->Translate(0.01f * Ball::radius_ * glm::vec3(sin(cue_->angle_), 0, cos(cue_->angle_)));
+		cue_->Translate(0.01f * Ball::radius_ * cue_direction);
 		cue_->angle_ += 0.01f;
 	}
 
 	if (glfwGetKey(ctx, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		cue_->Translate(-0.01f * Ball::radius_ * glm::vec3(sin(cue_->angle_), 0, cos(cue_->angle_)));
+		cue_->Translate(-0.01f * Ball::radius_ * cue_direction);
 		cue_->angle_ -= 0.01f;
 	}
 
