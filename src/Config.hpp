@@ -53,4 +53,5 @@ struct Config
 
 	//Physics
 	inline static constexpr float power_coeff = 150.0f;
+	inline static constexpr float velocity_multiplier = 0.985f;
 };

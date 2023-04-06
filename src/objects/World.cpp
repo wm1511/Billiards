@@ -32,29 +32,26 @@ void World::Draw(const std::shared_ptr<Shader>& shader) const
 		ball->Draw(shader);
 }
 
-void World::HandleBallsCollision() const
+void World::HandleBallsCollision(const int number) const
 {
-	for (int i = 0; i < balls_.size(); i++)
+	for (int j = number + 1; j < balls_.size(); j++)
 	{
-		for (int j = i + 1; j < balls_.size(); j++)
-		{
-			auto first_ball = balls_[i];
-			auto second_ball = balls_[j];
-			first_ball->CollideWith(second_ball);
-		}
+		const auto first_ball = balls_[number];
+		auto second_ball = balls_[j];
+		first_ball->CollideWith(second_ball);
 	}
 }
 
 void World::Update(const float dt) const
 {
 	KeyListener();
+
 	for (int i = 0; i < balls_.size(); i++)
 	{
 		balls_[i]->Roll(dt);
-		table_->HandleCollision(balls_[i]);
+		table_->HandleBoundsCollision(balls_[i]);
+		HandleBallsCollision(i);
 	}
-
-	HandleBallsCollision();
 }
 
 void World::KeyListener() const
@@ -62,7 +59,7 @@ void World::KeyListener() const
 	const auto window = glfwGetCurrentContext();
 	const auto cue_direction = glm::vec3(sin(cue_->angle_), 0.0f, cos(cue_->angle_));
 
-	const auto up = glm::vec3(0.0f, 1.0f, 0.0f);
+	constexpr auto up = glm::vec3(0.0f, 1.0f, 0.0f);
 	const auto power_vector = glm::cross(cue_direction, up);
 	auto power = glm::distance(cue_->translation_, balls_[0]->translation_);
 
@@ -74,7 +71,6 @@ void World::KeyListener() const
 			cue_->angle_ += 0.01f;
 		}
 	}
-
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
@@ -103,7 +99,6 @@ void World::KeyListener() const
 		}
 	}
 
-	//STRIKE
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
 	{
 		power *= Config::power_coeff;
@@ -112,32 +107,33 @@ void World::KeyListener() const
 	}
 }
 
-
-
 bool World::AreBallsInMotion() const
 {
 	for (const auto& ball : balls_)
-	{
-		if (length(ball->velocity_) >= Config::min_change)
-		{
-			ball->is_in_motion_ = true;
+		if (ball->IsInMotion())
 			return true;
-		}
-
-		ball->is_in_motion_ = false;
-	}
 
 	return false;
 }
 
-void World::Init() const
+void World::Init()
 {
+	// ustawianie białej i kija na pozycji początkowej
 	balls_[0]->Translate(glm::vec3(0.8f, 0.0f, 0.0f));
-
 	cue_->Translate(glm::vec3(0.8f + Ball::radius_ + Config::min_change, Ball::radius_, 0.0f));
+	cue_->Rotate(glm::vec3(0.0f, 1.0f, 0.0f), glm::pi<float>());
 
-	cue_->Rotate(glm::vec3(0, 1, 0), glm::pi<float>());
+	// tasowanie bil
+	balls_[5].swap(balls_[8]);
+	balls_[5].swap(balls_[15]);
 
+	auto rd = std::random_device{}; 
+	auto rng = std::default_random_engine {rd()};
+	std::shuffle(balls_.begin() + 1, balls_.end() - 1, rng);
+
+	balls_[5].swap(balls_[15]);
+
+	// tworzenie trójkąta
 	balls_[1]->Translate(glm::vec3(-0.8f + 2.0f * glm::root_three<float>() * Ball::radius_, 0.0f, 0.0f));
 
 	glm::vec3 temp = balls_[1]->translation_;

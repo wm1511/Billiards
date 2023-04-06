@@ -3,8 +3,6 @@
 
 #include "../core/Loader.hpp"
 
-Ball::Ball() : Object(Config::ball_path) { }
-
 Ball::Ball(const int number) : Object(Config::ball_path)
 {
 	const auto path = std::filesystem::current_path() / ("assets/textures/ball" + std::to_string(number) + ".jpg");
@@ -24,16 +22,21 @@ void Ball::Roll(const float dt)
 {
 	Translate(velocity_ * dt);
 
-	glm::vec3 up(0, 1, 0);
-	auto rotation_axis = glm::length(velocity_) != 0 ? glm::cross(up, glm::normalize(velocity_)) : glm::vec3(0, 0, 0);
-	float rotation_angle = glm::length(velocity_) * dt / radius_;
+	constexpr glm::vec3 up(0.0f, 1.0f, 0.0f);
+
+	const auto rotation_axis = glm::length(velocity_) > Config::min_change
+		                           ? glm::cross(up, glm::normalize(velocity_))
+		                           : glm::vec3(0.0f, 0.0f, 0.0f);
+	const float rotation_angle = glm::length(velocity_) * dt / radius_;
 
 	Rotate(rotation_axis, rotation_angle);
-	velocity_ *= 0.985f;
+	velocity_ *= Config::velocity_multiplier;
 
 	if (glm::length(velocity_) <= 0.01f)
-		velocity_ *= 0;
-
+	{
+		velocity_ *= 0.0f;
+		is_in_motion_ = false;
+	}
 }
 
 void Ball::CollideWith(const std::shared_ptr<Ball>& ball)
@@ -43,34 +46,33 @@ void Ball::CollideWith(const std::shared_ptr<Ball>& ball)
 	auto n_length = glm::length(n);
 	auto un = glm::normalize(n);
 
-	if (n_length > radius_ * 2) return;
+	if (n_length > radius_ * 2.0f) return;
 
-	//ustawianie bili do pozycji styku, ¿eby sie nie wchodzi³y w siebie no
+	//ustawianie bili do pozycji styku, Å¼eby sie nie wchodziÅ‚y w siebie no
 	auto min_trans_dist = un * (radius_ * 2 - n_length);
 	translation_ += min_trans_dist * 0.5f;
 	ball->translation_ -= min_trans_dist * 0.5f;
 
+	//jednostkowy styczny do bili (zarazem prostopadÅ‚y do n_norm)
+	auto ut = glm::vec3(-un.z, 0.0f, un.x);
 
-	//jednostkowy styczny do bili (zarazem prostopad³y do n_norm)
-	auto ut = glm::vec3(-un.z, 0, un.x);
-
-	//jakieœ prêdkoœci
-	auto v1n = glm::dot(un, velocity_);
-	auto v1t = glm::dot(ut, velocity_);
-	auto v2n = glm::dot(un, ball->velocity_);
-	auto v2t = glm::dot(ut, ball->velocity_);
+	//jakieÅ› prÄ™dkoÅ›ci
+	auto v1_n = glm::dot(un, velocity_);
+	auto v1_t = glm::dot(ut, velocity_);
+	auto v2_n = glm::dot(un, ball->velocity_);
+	auto v2_t = glm::dot(ut, ball->velocity_);
 
 	//normal velocities
-	auto v1nTag = v2n;
-	auto v2nTag = v1n;
+	auto v1_n_tag = v2_n;
+	auto v2_n_tag = v1_n;
 
-	auto v1nVec = glm::vec3(un * v1nTag);
-	auto v1tVec = glm::vec3(ut * v1t);
-	auto v2nVec = glm::vec3(un * v2nTag);
-	auto v2tVec = glm::vec3(ut * v2t);
+	auto v1_n_vec = glm::vec3(un * v1_n_tag);
+	auto v1_t_vec = glm::vec3(ut * v1_t);
+	auto v2_n_vec = glm::vec3(un * v2_n_tag);
+	auto v2_t_vec = glm::vec3(ut * v2_t);
 
-	velocity_ = v1nVec + v1tVec;
-	ball->velocity_ = v2nVec + v2tVec;
+	velocity_ = v1_n_vec + v1_t_vec;
+	ball->velocity_ = v2_n_vec + v2_t_vec;
 }
 
 

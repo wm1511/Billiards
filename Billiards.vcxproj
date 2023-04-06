@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\objects\Boundary.cpp" />
     <ClCompile Include="src\objects\Environment.cpp" />
     <ClCompile Include="src\objects\World.cpp" />
     <ClCompile Include="src\interface\TextRenderer.cpp" />
@@ -51,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Config.hpp" />
-    <ClInclude Include="src\objects\Boundary.hpp" />
     <ClInclude Include="src\objects\Environment.hpp" />
     <ClInclude Include="src\objects\Hole.hpp" />
     <ClInclude Include="src\objects\World.hpp" />

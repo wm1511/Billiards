@@ -10,9 +10,9 @@ public:
 	World();
 	void Update(float dt) const;
 	void Draw(const std::shared_ptr<Shader>& shader) const;
-	void Init() const;
+	void Init();
 	void KeyListener() const;
-	void HandleBallsCollision() const;
+	void HandleBallsCollision(int number) const;
 	[[nodiscard]] bool AreBallsInMotion() const;
 
 private:

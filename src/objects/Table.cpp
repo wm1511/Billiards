@@ -3,10 +3,9 @@
 
 Table::Table() : Object(Config::table_path)
 {
-
 }
 
-void Table::HandleCollision(const std::shared_ptr<Ball>& ball) const
+void Table::HandleBoundsCollision(const std::shared_ptr<Ball>& ball) const
 {
 	if (ball->translation_.x >= bound_x_)
 	{
