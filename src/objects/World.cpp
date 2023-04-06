@@ -45,13 +45,28 @@ void World::HandleBallsCollision() const
 	}
 }
 
-void World::Update(const float dt) const
+void World::Update(const float dt)
 {
 	KeyListener();
 	for (int i = 0; i < balls_.size(); i++)
 	{
 		balls_[i]->Roll(dt);
 		table_->HandleCollision(balls_[i]);
+
+		//if (balls_.size() == 1)
+			//reset gry;
+
+		if (balls_[i]->IsInHole(table_->holes_))
+		{
+			if (i != 0)
+			{
+				balls_.erase(balls_.begin() + i);
+			}
+			else
+			{
+				balls_[0]->translation_ = glm::vec3(0.8f, Ball::radius_, 0.0f);
+			}
+		}
 	}
 
 	HandleBallsCollision();

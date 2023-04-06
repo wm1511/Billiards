@@ -2,6 +2,7 @@
 #include "Ball.hpp"
 
 #include "../core/Loader.hpp"
+#include "Hole.hpp"
 
 Ball::Ball() : Object(Config::ball_path) { }
 
@@ -25,7 +26,7 @@ void Ball::Roll(const float dt)
 	Translate(velocity_ * dt);
 
 	glm::vec3 up(0, 1, 0);
-	auto rotation_axis = glm::length(velocity_) != 0 ? glm::cross(up, glm::normalize(velocity_)) : glm::vec3(0, 0, 0);
+	auto rotation_axis = glm::length(velocity_) != 0 ? glm::cross(up, velocity_) : glm::vec3(0, 0, 0);
 	float rotation_angle = glm::length(velocity_) * dt / radius_;
 
 	Rotate(rotation_axis, rotation_angle);
@@ -71,6 +72,16 @@ void Ball::CollideWith(const std::shared_ptr<Ball>& ball)
 
 	velocity_ = v1nVec + v1tVec;
 	ball->velocity_ = v2nVec + v2tVec;
+}
+
+bool Ball::IsInHole(const std::vector<std::shared_ptr<Hole>>& holes)
+{
+	bool in_hole = false;
+
+	for (const auto& hole : holes)
+		in_hole |= glm::distance(translation_, hole->position) < Hole::radius;
+
+	return in_hole;
 }
 
 
