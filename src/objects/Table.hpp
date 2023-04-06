@@ -3,12 +3,14 @@
 
 #pragma once
 #include "Ball.hpp"
+#include "Hole.hpp"
 
 class Table final : public Object
 {
 public:
 	Table();
 	void HandleBoundsCollision(const std::shared_ptr<Ball>& ball) const;
+	std::vector<std::shared_ptr<Hole>> holes_{};
 
 private:
 	inline static constexpr float bound_x_ = 1.35f - Ball::radius_ - 0.042f;

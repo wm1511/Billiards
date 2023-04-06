@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.hpp"
+#include "Hole.hpp"
 
 class Ball final : public Object
 {
@@ -9,6 +10,7 @@ public:
 	void Shot(glm::vec3 power);
 	void Roll(float dt);
 	void CollideWith(const std::shared_ptr<Ball>& ball);
+	bool IsInHole(const std::vector<std::shared_ptr<Hole>>& holes);
 
 	[[nodiscard]] bool IsInMotion() const { return is_in_motion_; }
 

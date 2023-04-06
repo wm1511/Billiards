@@ -1,7 +1,10 @@
 #pragma once
 
-struct Hole
+class Hole
 {
-	glm::vec2 position{};
-	inline static constexpr float radius{0.07f};
+public:
+	glm::vec3 position{};
+	inline static constexpr float radius{ 0.07f };
+
+private:
 };

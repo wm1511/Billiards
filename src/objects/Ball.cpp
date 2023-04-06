@@ -75,4 +75,12 @@ void Ball::CollideWith(const std::shared_ptr<Ball>& ball)
 	ball->velocity_ = v2_n_vec + v2_t_vec;
 }
 
+bool Ball::IsInHole(const std::vector<std::shared_ptr<Hole>>& holes)
+{
+	bool in_hole = false;
 
+	for (const auto& hole : holes)
+		in_hole |= glm::distance(translation_, hole->position) < Hole::radius;
+
+	return in_hole;
+}
