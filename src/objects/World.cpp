@@ -11,6 +11,16 @@ World::World() :
 		balls_.push_back(std::make_shared<Ball>(n));
 		balls_[n]->Translate(glm::vec3{ 0.0f, Ball::radius_, 0.0f });
 	}
+
+	// mieszanie bil
+	balls_[5].swap(balls_[8]);
+	balls_[5].swap(balls_[15]);
+
+	auto rd = std::random_device{};
+	auto rng = std::default_random_engine{ rd() };
+	std::shuffle(balls_.begin() + 1, balls_.end() - 1, rng);
+
+	balls_[5].swap(balls_[15]);
 }
 
 void World::Draw(const std::shared_ptr<Shader>& shader) const
@@ -18,18 +28,13 @@ void World::Draw(const std::shared_ptr<Shader>& shader) const
 	table_->Draw(shader);
 
 	if (AreBallsInMotion())
-	{
-		cue_->translation_.x = balls_[0]->translation_.x + Ball::radius_ + Config::min_change;
-		cue_->translation_.z = balls_[0]->translation_.z;
-		cue_->angle_ = glm::pi<float>();
-	}
+		cue_->PlaceAtBall(balls_[0]);
 	else
-	{
 		cue_->Draw(shader);
-	}
 
 	for (const auto& ball : balls_)
-		ball->Draw(shader);
+		if (ball->IsDrawn())
+			ball->Draw(shader);
 }
 
 void World::HandleBallsCollision(const int number) const
@@ -42,84 +47,82 @@ void World::HandleBallsCollision(const int number) const
 	}
 }
 
-void World::Update(const float dt)
+void World::HandleHolesFall(const int number) const
 {
-	KeyListener();
-
-	for (int i = 0; i < balls_.size(); i++)
+	if (!AreBallsInMotion())
 	{
-		balls_[i]->Roll(dt);
-		table_->HandleBoundsCollision(balls_[i]);
-
-		//if (balls_.size() == 1)
-			//reset gry;
-
-		if (balls_[i]->IsInHole(table_->holes_))
+		if (number == 0)
 		{
-			if (i != 0)
-			{
-				balls_.erase(balls_.begin() + i);
-			}
-			else
-			{
-				balls_[0]->translation_ = glm::vec3(0.8f, Ball::radius_, 0.0f);
-			}
+			balls_[number]->TakeFromHole();
+			balls_[number]->Translate(glm::vec3(0.8f, 0.0f, 0.0f));
+			cue_->PlaceAtBall(balls_[0]);
+			return;
 		}
-		table_->HandleBoundsCollision(balls_[i]);
-		HandleBallsCollision(i);
+		
+		balls_[number]->SetDrawn(false);
+		return;
+	}
+
+	if (balls_[number]->translation_.y > Table::hole_bottom_ + Ball::radius_)
+		balls_[number]->translation_.y -= 0.005f;
+
+	const auto translation_horizontal = glm::vec2(balls_[number]->translation_.x, balls_[number]->translation_.z);
+	const auto hole_horizontal = glm::vec2(balls_[number]->GetHole().x, balls_[number]->GetHole().z);
+
+	const glm::vec2 direction = glm::normalize(translation_horizontal - hole_horizontal);
+	const float distance = glm::distance(translation_horizontal, hole_horizontal);
+
+	if (distance > Table::hole_radius_ - Ball::radius_)
+		balls_[number]->BounceOffHole(-direction, Table::hole_radius_);
+}
+
+void World::HandleBoundsCollision(const int number) const
+{
+	const auto ball_pos = balls_[number]->translation_;
+	constexpr auto hole_edge_z = 0.7f - Table::hole_radius_ - Ball::radius_;
+	constexpr auto hole_edge_x = 1.35f - Table::hole_radius_ - Ball::radius_;
+
+	if (ball_pos.x >= Table::bound_x_ && ball_pos.z < hole_edge_z && ball_pos.z > -hole_edge_z)
+	{
+		balls_[number]->BounceOffBound(glm::vec3(-1.0f, 0.0f, 0.0f), Table::bound_x_, Table::bound_z_);
+	}
+	else if (ball_pos.x <= -Table::bound_x_ && ball_pos.z < hole_edge_z && ball_pos.z > -hole_edge_z)
+	{
+		balls_[number]->BounceOffBound(glm::vec3(1.0f, 0.0f, 0.0f), Table::bound_x_, Table::bound_z_);
+	}
+	else if (ball_pos.z >= Table::bound_z_ &&
+		((ball_pos.x < hole_edge_x && ball_pos.x > Table::hole_radius_) ||
+		(ball_pos.x > -hole_edge_x && ball_pos.x < -Table::hole_radius_)))
+	{
+		balls_[number]->BounceOffBound(glm::vec3(0.0f, 0.0f, -1.0f), Table::bound_x_, Table::bound_z_);
+	}
+	else if (ball_pos.z <= -Table::bound_z_ &&
+		((ball_pos.x < hole_edge_x && ball_pos.x > Table::hole_radius_) ||
+		(ball_pos.x > -hole_edge_x && ball_pos.x < -Table::hole_radius_)))
+	{
+		balls_[number]->BounceOffBound(glm::vec3(0.0f, 0.0f, 1.0f), Table::bound_x_, Table::bound_z_);
 	}
 }
 
-void World::KeyListener() const
+void World::Update(const float dt) const
 {
-	const auto window = glfwGetCurrentContext();
-	const auto cue_direction = glm::vec3(sin(cue_->angle_), 0.0f, cos(cue_->angle_));
+	cue_->HandleShot(balls_[0], dt);
 
-	constexpr auto up = glm::vec3(0.0f, 1.0f, 0.0f);
-	const auto power_vector = glm::cross(cue_direction, up);
-	auto power = glm::distance(cue_->translation_, balls_[0]->translation_);
+	const bool r_pressed = glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_R) == GLFW_PRESS;
+	if ((balls_.size() == 1 || r_pressed) && !AreBallsInMotion())
+		Reset();
 
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	for (int i = 0; i < balls_.size(); i++)
 	{
-		if (!cue_->power_changed_)
-		{
-			cue_->Translate(0.01f * Ball::radius_ * cue_direction);
-			cue_->angle_ += 0.01f;
-		}
-	}
+		balls_[i]->CheckHoleFall(table_->GetHoles(), Table::hole_radius_);
+		balls_[i]->Roll(dt);
 
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-	{
-		if (!cue_->power_changed_)
-		{
-			cue_->Translate(-0.01f * Ball::radius_ * cue_direction);
-			cue_->angle_ -= 0.01f;
-		}
-	}
+		if (balls_[i]->IsInHole())
+			HandleHolesFall(i);
+		else
+			HandleBoundsCollision(i);
 
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-	{
-		if (power > Ball::radius_ + Config::min_change)
-		{
-			cue_->Translate(-power_vector * 0.01f);
-			cue_->power_changed_ = true;
-		}
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-	{
-		if (power <= 0.5f)
-		{
-			cue_->Translate(power_vector * 0.01f);
-			cue_->power_changed_ = true;
-		}
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
-	{
-		power *= Config::power_coeff;
-		balls_[0]->Shot(-power_vector * power);
-		cue_->power_changed_ = false;
+		HandleBallsCollision(i);
 	}
 }
 
@@ -132,22 +135,14 @@ bool World::AreBallsInMotion() const
 	return false;
 }
 
-void World::Init()
+void World::Init() const
 {
 	// ustawianie białej i kija na pozycji początkowej
 	balls_[0]->Translate(glm::vec3(0.8f, 0.0f, 0.0f));
+	cue_->translation_ = glm::vec3(0.0f);
+	cue_->angle_ = 0.0f;
 	cue_->Translate(glm::vec3(0.8f + Ball::radius_ + Config::min_change, Ball::radius_, 0.0f));
 	cue_->Rotate(glm::vec3(0.0f, 1.0f, 0.0f), glm::pi<float>());
-
-	// tasowanie bil
-	balls_[5].swap(balls_[8]);
-	balls_[5].swap(balls_[15]);
-
-	auto rd = std::random_device{}; 
-	auto rng = std::default_random_engine {rd()};
-	std::shuffle(balls_.begin() + 1, balls_.end() - 1, rng);
-
-	balls_[5].swap(balls_[15]);
 
 	// tworzenie trójkąta
 	balls_[1]->Translate(glm::vec3(-0.8f + 2.0f * glm::root_three<float>() * Ball::radius_, 0.0f, 0.0f));
@@ -166,4 +161,13 @@ void World::Init()
 	}
 }
 
+void World::Reset() const
+{
+	for (const auto& ball : balls_)
+	{
+		ball->TakeFromHole();
+		ball->SetDrawn(true);
+	}
 
+	Init();
+}

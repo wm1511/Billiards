@@ -5,9 +5,10 @@ class Cue final : public Object
 {
 public:
 	Cue();
-
-	bool power_changed_{false};
+	void HandleShot(const std::shared_ptr<Ball>& white_ball, float dt);
+	void PlaceAtBall(const std::shared_ptr<Ball>& ball);
 
 private:
+	bool power_changed_{false};
 
 };

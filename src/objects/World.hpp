@@ -8,11 +8,13 @@ class World
 {
 public:
 	World();
-	void Update(float dt);
+	void Update(float dt) const;
 	void Draw(const std::shared_ptr<Shader>& shader) const;
-	void Init();
-	void KeyListener() const;
+	void Init() const;
+	void Reset() const;
 	void HandleBallsCollision(int number) const;
+	void HandleHolesFall(int number) const;
+	void HandleBoundsCollision(int number) const;
 	[[nodiscard]] bool AreBallsInMotion() const;
 
 private:

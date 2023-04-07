@@ -2,8 +2,10 @@
 #include <string>
 #include <glm/vec3.hpp>
 
-struct Config
+struct Config final
 {
+	Config() = delete;
+
 	// Window
 	inline static constexpr int width = 1920;
 	inline static constexpr int height = 1080;
@@ -51,7 +53,7 @@ struct Config
 	inline static constexpr const char* const font_path = "Silvanowesterndemo-ALA2p.otf";
 	inline static constexpr unsigned default_font_size = 40;
 
-	//Physics
-	inline static constexpr float power_coeff = 150.0f;
+	// Physics
+	inline static constexpr float power_coeff = 10.0f;
 	inline static constexpr float velocity_multiplier = 0.985f;
 };

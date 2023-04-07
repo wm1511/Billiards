@@ -44,7 +44,7 @@ void App::OnUpdate()
 	camera_->UpdateMain(main_shader_);
 
 	//environment_->Prepare();
-	world_->Update(0.001f);
+	world_->Update(static_cast<float>(delta_time_));
 	world_->Draw(main_shader_);
 
 	//camera_->UpdateBackground(background_shader_);

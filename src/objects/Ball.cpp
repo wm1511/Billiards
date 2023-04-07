@@ -11,11 +11,8 @@ Ball::Ball(const int number) : Object(Config::ball_path)
 
 void Ball::Shot(const glm::vec3 power)
 {
-	if (!is_in_motion_)
-	{
+	if (!IsInMotion())
 		velocity_ = power;
-		is_in_motion_ = true;
-	}
 }
 
 void Ball::Roll(const float dt)
@@ -32,11 +29,8 @@ void Ball::Roll(const float dt)
 	Rotate(rotation_axis, rotation_angle);
 	velocity_ *= Config::velocity_multiplier;
 
-	if (glm::length(velocity_) <= 0.01f)
-	{
+	if (!IsInMotion())
 		velocity_ *= 0.0f;
-		is_in_motion_ = false;
-	}
 }
 
 void Ball::CollideWith(const std::shared_ptr<Ball>& ball)
@@ -75,12 +69,47 @@ void Ball::CollideWith(const std::shared_ptr<Ball>& ball)
 	ball->velocity_ = v2_n_vec + v2_t_vec;
 }
 
-bool Ball::IsInHole(const std::vector<std::shared_ptr<Hole>>& holes)
+void Ball::BounceOffBound(const glm::vec3 surface_normal, const float bound_x, const float bound_z)
 {
-	bool in_hole = false;
+	velocity_ = glm::reflect(velocity_, surface_normal);
 
+	if (surface_normal.x > Config::min_change || surface_normal.x < -Config::min_change)
+		translation_.x = -surface_normal.x * bound_x;
+	else if (surface_normal.z > Config::min_change || surface_normal.z < -Config::min_change)
+		translation_.z = -surface_normal.z * bound_z;
+}
+
+void Ball::BounceOffHole(const glm::vec2 surface_normal, const float hole_radius)
+{
+	const float temp = translation_.y;
+	const auto horizontal_velocity = glm::vec2(velocity_.x, velocity_.z);
+	const auto reflected_velocity = glm::reflect(horizontal_velocity, surface_normal);
+	const auto horizontal_direction = -glm::vec3(surface_normal.x, 0.0f, surface_normal.y);
+
+	velocity_ = glm::vec3(reflected_velocity.x, velocity_.y, reflected_velocity.y);
+	translation_ = hole_ + horizontal_direction * (hole_radius - radius_);
+	translation_.y = temp;
+}
+
+void Ball::TakeFromHole()
+{
+	is_in_hole_ = false;
+	translation_ = glm::vec3(0.0f, radius_, 0.0f);
+}
+
+void Ball::SetDrawn(const bool drawn)
+{
+	is_drawn_ = drawn;
+}
+
+void Ball::CheckHoleFall(const std::vector<glm::vec3>& holes, const float hole_radius)
+{
 	for (const auto& hole : holes)
-		in_hole |= glm::distance(translation_, hole->position) < Hole::radius;
-
-	return in_hole;
+	{
+		if (glm::distance(translation_, hole) < hole_radius)
+		{
+			hole_ = hole;
+			is_in_hole_ = true;
+		}
+	}
 }

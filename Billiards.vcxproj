@@ -51,7 +51,6 @@
   <ItemGroup>
     <ClInclude Include="src\Config.hpp" />
     <ClInclude Include="src\objects\Environment.hpp" />
-    <ClInclude Include="src\objects\Hole.hpp" />
     <ClInclude Include="src\objects\World.hpp" />
     <ClInclude Include="src\interface\TextRenderer.hpp" />
     <ClInclude Include="src\glad\include\glad\gl.h" />
