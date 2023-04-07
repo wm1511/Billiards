@@ -34,6 +34,25 @@ void TextRenderer::Update() const
 	text_shader_->SetMat4(projection_matrix_, "projectionMatrix");
 }
 
+void TextRenderer::Render()
+{
+	text_shader_->Bind();
+
+	text_shader_->SetVec3(glm::vec3(1.0f), "textColor");
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(vao_);
+
+	for (auto& [position_x, position_y, text] : texts_)
+		for (const auto c : text)
+			RenderCharacter(position_x, position_y, c);
+
+	texts_.clear();
+
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 void TextRenderer::RenderCharacter(float& x, float& y, const char character)
 {
 	const Character& ch = characters_[character];

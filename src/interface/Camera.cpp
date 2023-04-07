@@ -28,7 +28,8 @@ void Camera::UpdateViewMatrix(const float frame_time)
 
 void Camera::UpdateProjectionMatrix(const int width, const int height)
 {
-	projection_matrix_ = glm::perspective(Config::fov, static_cast<float>(width) / static_cast<float>(height), Config::near_clip, Config::far_clip);
+	const float aspect_ratio = width > 0 && height > 0 ? static_cast<float>(width) / static_cast<float>(height) : 1.0f;
+	projection_matrix_ = glm::perspective(Config::fov, aspect_ratio, Config::near_clip, Config::far_clip);
 }
 
 void Camera::UpdateMain(const std::shared_ptr<Shader>& main_shader) const

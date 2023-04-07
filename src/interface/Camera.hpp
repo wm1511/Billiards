@@ -20,7 +20,7 @@ private:
 	glm::mat4 view_matrix_{};
 
 	glm::vec2 prior_cursor_{0.0f};
-	glm::vec3 position_{0.0f, 2.0f, 0.0f};
+	glm::vec3 position_{0.0f, 1.5f, 0.0f};
 	float pitch_{-glm::half_pi<float>()};
 	float yaw_{0.0f};
 };

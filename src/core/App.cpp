@@ -50,7 +50,8 @@ void App::OnUpdate()
 	//camera_->UpdateBackground(background_shader_);
 	//environment_->Draw(background_shader_);
 
-	text_renderer_->Render(0.0f, static_cast<float>(window_->GetHeight() - Config::default_font_size), "FPS: {}", static_cast<int>(1.0 / delta_time_));
+	text_renderer_->AddText(0.0f, static_cast<float>(window_->GetHeight() - Config::default_font_size), "FPS: {}", static_cast<int>(1.0 / delta_time_));
+	text_renderer_->Render();
 }
 
 void App::OnResize() const

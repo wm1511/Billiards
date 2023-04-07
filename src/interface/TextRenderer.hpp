@@ -10,6 +10,13 @@ struct Character
 	unsigned advance{};
 };
 
+struct Text
+{
+	float position_x{};
+	float position_y{};
+	std::string text{};
+};
+
 class TextRenderer
 {
 public:
@@ -17,23 +24,12 @@ public:
 	void Init();
 	void UpdateProjectionMatrix(int width, int height);
 	void Update() const;
+	void Render();
 
-	template <typename... Args> void Render(float x, float y, const std::string& format_string, Args&&... format_args)
+	template <typename... Args> void AddText(float x, float y, const std::string& format_string, Args&&... format_args)
 	{
-		text_shader_->Bind();
-
-		text_shader_->SetVec3(glm::vec3(1.0f), "textColor");
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindVertexArray(vao_);
-
 		const std::string text = std::vformat(format_string, std::make_format_args(std::forward<Args>(format_args)...));
-
-		for (const auto& c : text)
-			RenderCharacter(x, y, c);
-
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		texts_.emplace_back(x, y, text);
 	}
 
 private:
@@ -41,6 +37,7 @@ private:
 	void Load();
 
 	std::unordered_map<int, Character> characters_{};
+	std::vector<Text> texts_{};
 	std::unique_ptr<Shader> text_shader_ = nullptr;
 
 	unsigned vao_, vbo_;

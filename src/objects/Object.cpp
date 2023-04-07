@@ -45,7 +45,6 @@ void Object::Rotate(const glm::vec3& rotation_axis, const float angle)
 		angle_ = glm::mod(angle_, glm::two_pi<float>());
 		angle_ += angle;
 	}
-	else return;
 }
 
 glm::mat4 Object::GetModelMatrix() const
