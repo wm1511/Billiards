@@ -9,7 +9,8 @@ public:
 	void PlaceAtBall(const std::shared_ptr<Ball>& ball);
 
 private:
+	[[nodiscard]] glm::vec3 CalculateRotationAxis() const;
+
 	bool power_changed_{false};
-	glm::mat4 local_transform_;
 
 };
