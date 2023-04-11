@@ -10,5 +10,6 @@ public:
 
 private:
 	bool power_changed_{false};
+	glm::mat4 local_transform_;
 
 };

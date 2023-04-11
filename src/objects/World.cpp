@@ -142,7 +142,7 @@ void World::Init() const
 	cue_->translation_ = glm::vec3(0.0f);
 	cue_->angle_ = 0.0f;
 	cue_->Translate(glm::vec3(0.8f + Ball::radius_ + Config::min_change, Ball::radius_, 0.0f));
-	cue_->Rotate(glm::vec3(0.0f, 1.0f, 0.0f), glm::pi<float>());
+	cue_->Rotate(glm::vec3(-0.1f, 1.0f, 0.0f), glm::pi<float>());
 
 	// tworzenie trójkąta
 	balls_[1]->Translate(glm::vec3(-0.8f + 2.0f * glm::root_three<float>() * Ball::radius_, 0.0f, 0.0f));

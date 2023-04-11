@@ -14,12 +14,40 @@ void Cue::HandleShot(const std::shared_ptr<Ball>& white_ball, const float dt)
 	const auto power_vector = glm::cross(cue_direction, up);
 	auto power = glm::distance(translation_, white_ball->translation_);
 
+	//float rotationAngleX = (angle_ ) ? : ;
+
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
 		if (!power_changed_)
 		{
+			//TODO
+
+			
+			if (angle_ > 0 && angle_ < 1.57f)
+			{
+				//
+				Rotate(glm::vec3(-0.0f, 1.0f, -0.25f), dt);
+			}
+			else if (angle_ > 1.57f && angle_ < 3.14f)
+			{
+				Rotate(glm::vec3(-0.0f, 1.0f, -0.05f), dt);
+			}
+			else if (angle_ > 3.14 && angle_ < 4.71f)
+			{
+				Rotate(glm::vec3(-0.1f, 1.0f, 0.0f), dt);
+			}
+			else if (angle_ > 4.71 && angle_ < 6.3f)
+			{
+				//
+				Rotate(glm::vec3(-0.1f, 1.0f, 0.1f), dt);
+			}
+			else
+			{
+				Rotate(glm::vec3(-0.1f, 1.0f, 0.1f), dt);
+			}
+
 			Translate(dt * Ball::radius_ * cue_direction);
-			angle_ += dt;
+
 		}
 	}
 
@@ -27,8 +55,8 @@ void Cue::HandleShot(const std::shared_ptr<Ball>& white_ball, const float dt)
 	{
 		if (!power_changed_)
 		{
+			//TODO
 			Translate(-dt * Ball::radius_ * cue_direction);
-			angle_ -= dt;
 		}
 	}
 
