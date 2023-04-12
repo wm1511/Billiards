@@ -5,7 +5,7 @@ App::App() :
 	window_(std::make_unique<Window>()),
 	camera_(std::make_unique<Camera>()),
 	world_(std::make_unique<World>()),
-	//environment_(std::make_unique<Environment>()),
+	environment_(std::make_unique<Environment>()),
 	text_renderer_(std::make_unique<TextRenderer>()),
 	main_shader_(std::make_shared<Shader>(Config::vertex_path, Config::fragment_path)),
 	background_shader_(std::make_shared<Shader>(Config::background_vertex_path, Config::background_fragment_path))
@@ -43,12 +43,12 @@ void App::OnUpdate()
 	camera_->UpdateViewMatrix(static_cast<float>(delta_time_));
 	camera_->UpdateMain(main_shader_);
 
-	//environment_->Prepare();
+	environment_->Prepare();
 	world_->Update(static_cast<float>(delta_time_));
 	world_->Draw(main_shader_);
 
-	//camera_->UpdateBackground(background_shader_);
-	//environment_->Draw(background_shader_);
+	camera_->UpdateBackground(background_shader_);
+	environment_->Draw(background_shader_);
 
 	text_renderer_->AddText(0.0f, static_cast<float>(window_->GetHeight() - Config::default_font_size), "FPS: {}", static_cast<int>(1.0 / delta_time_));
 	text_renderer_->Render();
