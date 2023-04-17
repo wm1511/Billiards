@@ -51,7 +51,7 @@ struct Config final
 
 	// Font
 	inline static constexpr const char* const font_path = "Silvanowesterndemo-ALA2p.otf";
-	inline static constexpr unsigned default_font_size = 40;
+	inline static constexpr unsigned default_font_size = 30;
 
 	// Physics
 	inline static constexpr float power_coeff = 10.0f;

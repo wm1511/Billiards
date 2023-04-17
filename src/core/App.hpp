@@ -22,6 +22,7 @@ private:
 	void OnUpdate();
 	void OnResize() const;
 	void Init() const;
+	void DrawHelp() const;
 
 	std::unique_ptr<Window> window_ = nullptr;
 	std::unique_ptr<Camera> camera_ = nullptr;

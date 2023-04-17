@@ -50,7 +50,13 @@ void App::OnUpdate()
 	camera_->UpdateBackground(background_shader_);
 	environment_->Draw(background_shader_);
 
-	text_renderer_->AddText(0.0f, static_cast<float>(window_->GetHeight() - Config::default_font_size), "FPS: {}", static_cast<int>(1.0 / delta_time_));
+	if (glfwGetKey(window_->GetGLFWWindow(), GLFW_KEY_H) == GLFW_PRESS)
+		DrawHelp();
+
+	text_renderer_->AddText(0.0f, static_cast<float>(window_->GetHeight() - Config::default_font_size),
+			"Press \'H\' to show help");
+	text_renderer_->AddText(0.0f,static_cast<float>(window_->GetHeight() - 2 * Config::default_font_size),
+		"FPS: {}", static_cast<int>(1.0 / delta_time_));
 	text_renderer_->Render();
 }
 
@@ -87,4 +93,28 @@ void App::Init() const
 	main_shader_->SetInt(7, "material.aoMap");
 	main_shader_->SetInt(8, "material.metallicMap");
 	main_shader_->Unbind();
+}
+
+void App::DrawHelp() const
+{
+	text_renderer_->AddText(0.0f, 10 * Config::default_font_size,
+			"Release cursor using \'ESC\'");
+	text_renderer_->AddText(0.0f, 9 * Config::default_font_size,
+			"Consume cursor using \'SPACE\'");
+	text_renderer_->AddText(0.0f, 8 * Config::default_font_size,
+			"Move camera using \'W\', \'S\', \'A\', \'D\', \'E\', \'Q\'");
+	text_renderer_->AddText(0.0f, 7 * Config::default_font_size,
+			"Rotate camera using mouse");
+	text_renderer_->AddText(0.0f, 6 * Config::default_font_size,
+			"Adjust strike force using \'UP\' and \'DOWN\' arrows");
+	text_renderer_->AddText(0.0f, 5 * Config::default_font_size,
+			"Rotate cue using \'RIGHT\' and \'LEFT\' arrows");
+	text_renderer_->AddText(0.0f, 4 * Config::default_font_size,
+			"Cue cannot be rotated after changing strike force");
+	text_renderer_->AddText(0.0f, 3 * Config::default_font_size,
+			"Strike a white ball using \'F\'");
+	text_renderer_->AddText(0.0f, 2 * Config::default_font_size,
+			"Reset balls to initial position using \'R\'");
+	text_renderer_->AddText(0.0f, Config::default_font_size,
+			"Turn on additional light using \'LSHIFT\'");
 }

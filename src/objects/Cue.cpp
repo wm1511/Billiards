@@ -62,20 +62,11 @@ void Cue::HandleShot(const std::shared_ptr<Ball>& white_ball, const float dt)
 
 void Cue::PlaceAtBall(const std::shared_ptr<Ball>& ball)
 {
+	translation_.x = ball->translation_.x + Ball::radius_ + Config::min_change;
 	translation_.y = Ball::radius_;
 	translation_.z = ball->translation_.z;
 
-	if (ball->translation_.x > 0.0f)
-	{
-		translation_.x = ball->translation_.x + Ball::radius_ + Config::min_change;
-		angle_ = glm::pi<float>();
-		rotation_axis_ = glm::vec3(-0.1f, 1.0f, 0.0f);
-	}
-	else
-	{
-		translation_.x = ball->translation_.x - Ball::radius_ - Config::min_change;
-		angle_ = 0.0f;
-		rotation_axis_ = glm::vec3(0.1f, 1.0f, 0.0f);
-	}
+	angle_ = glm::pi<float>();
+	rotation_axis_ = glm::vec3(-0.1f, 1.0f, 0.0f);
 }
 
