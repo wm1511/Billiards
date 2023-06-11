@@ -15,6 +15,10 @@ public:
 	{
 		return glfwWindowShouldClose(window_);
 	}
+	void SetCloseFlag()
+	{
+		glfwSetWindowShouldClose(window_, 1);
+	}
 	[[nodiscard]] GLFWwindow* GetGLFWWindow() const
 	{
 		return window_;
@@ -38,7 +42,6 @@ public:
 
 private:
 	static void FramebufferResizeCallback(GLFWwindow* window, int width, int height);
-	static void KeyPressedCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	[[noreturn]] static void ErrorCallback(int error, const char* description);
 
 	void Init();

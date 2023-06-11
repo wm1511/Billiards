@@ -104,20 +104,19 @@ void World::HandleBoundsCollision(const int number) const
 	}
 }
 
-void World::Update(const float dt) const
+void World::Update(const float dt, const bool in_game) const
 {
-	cue_->HandleShot(balls_[0], dt);
+	if (in_game)
+		cue_->HandleShot(balls_[0], dt);
 
-	const bool r_pressed = glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_R) == GLFW_PRESS;
-	if ((balls_.size() == 1 || r_pressed) && !AreBallsInMotion())
+	if (balls_.size() == 1)
 		Reset();
 
 	for (int i = 0; i < balls_.size(); i++)
 	{
-		balls_[i]->CheckHoleFall(table_->GetHoles(), Table::hole_radius_);
 		balls_[i]->Roll(dt);
 
-		if (balls_[i]->IsInHole())
+		if (balls_[i]->IsInHole(table_->GetHoles(), Table::hole_radius_))
 			HandleHolesFall(i);
 		else
 			HandleBoundsCollision(i);

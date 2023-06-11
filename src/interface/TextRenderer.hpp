@@ -1,4 +1,5 @@
 #pragma once
+#include "Menu.hpp"
 #include "../core/Shader.hpp"
 #include "../core/Texture.hpp"
 
@@ -10,13 +11,6 @@ struct Character
 	unsigned advance{};
 };
 
-struct Text
-{
-	float position_x{};
-	float position_y{};
-	std::string text{};
-};
-
 class TextRenderer
 {
 public:
@@ -24,23 +18,17 @@ public:
 	void Init();
 	void UpdateProjectionMatrix(int width, int height);
 	void Update() const;
-	void Render();
-
-	template <typename... Args> void AddText(float x, float y, const std::string& format_string, Args&&... format_args)
-	{
-		const std::string text = std::vformat(format_string, std::make_format_args(std::forward<Args>(format_args)...));
-		texts_.emplace_back(x, y, text);
-	}
+	void Render(std::vector<Text>& texts);
 
 private:
 	void RenderCharacter(float& x, float& y, char character);
+	float CalculateTextWidth(const std::string& text);
 	void Load();
 
 	std::unordered_map<int, Character> characters_{};
-	std::vector<Text> texts_{};
 	std::unique_ptr<Shader> text_shader_ = nullptr;
 
 	unsigned vao_, vbo_;
-	glm::vec2 scale_{ 1.0f };
+	glm::vec2 font_scale_{ 1.0f };
 	glm::mat4 projection_matrix_{};
 };

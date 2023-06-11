@@ -25,7 +25,7 @@ void TextRenderer::Init()
 void TextRenderer::UpdateProjectionMatrix(const int width, const int height)
 {
 	projection_matrix_ = glm::ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
-	scale_ = glm::vec2(width / static_cast<float>(Config::width), height / static_cast<float>(Config::height));
+	font_scale_ = glm::vec2(width / static_cast<float>(Config::width), height / static_cast<float>(Config::height));
 }
 
 void TextRenderer::Update() const
@@ -34,20 +34,32 @@ void TextRenderer::Update() const
 	text_shader_->SetMat4(projection_matrix_, "projectionMatrix");
 }
 
-void TextRenderer::Render()
+void TextRenderer::Render(std::vector<Text>& texts)
 {
 	text_shader_->Bind();
-
-	text_shader_->SetVec3(glm::vec3(1.0f), "textColor");
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(vao_);
 
-	for (auto& [position_x, position_y, text] : texts_)
+	for (auto& [position_x, position_y, text, scale, alignment, selected] : texts)
+	{
+		text_shader_->SetVec3(selected ? glm::vec3(1.0f, 0.0f, 0.0f) : glm::vec3(1.0f), "textColor");
+
+		const glm::vec2 temp_scale = font_scale_;
+		font_scale_ *= scale;
+
+		if (alignment == Alignment::CENTER)
+			position_x -= CalculateTextWidth(text) / 2.0f;
+		else if (alignment == Alignment::RIGHT)
+			position_x -= CalculateTextWidth(text);
+
 		for (const auto c : text)
 			RenderCharacter(position_x, position_y, c);
 
-	texts_.clear();
+		font_scale_ = temp_scale;
+	}
+
+	texts.clear();
 
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -57,11 +69,11 @@ void TextRenderer::RenderCharacter(float& x, float& y, const char character)
 {
 	const Character& ch = characters_[character];
 
-	const float position_x = x + ch.bearing.x * scale_.x;
-	const float position_y = y - (ch.size.y - ch.bearing.y) * scale_.y;
+	const float position_x = x + ch.bearing.x * font_scale_.x;
+	const float position_y = y - (ch.size.y - ch.bearing.y) * font_scale_.y;
 
-	const float w = ch.size.x * scale_.x;
-	const float h = ch.size.y * scale_.y;
+	const float w = ch.size.x * font_scale_.x;
+	const float h = ch.size.y * font_scale_.y;
 
 	const float vertices[6][4] =
 	{
@@ -84,7 +96,17 @@ void TextRenderer::RenderCharacter(float& x, float& y, const char character)
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	x += (ch.advance >> 6) * scale_.x;
+	x += (ch.advance >> 6) * font_scale_.x;
+}
+
+float TextRenderer::CalculateTextWidth(const std::string& text)
+{
+	float width{};
+
+	for (const auto& c : text)
+		width += (characters_[c].advance >> 6) * font_scale_.x;
+
+	return width;
 }
 
 void TextRenderer::Load()

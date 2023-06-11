@@ -8,7 +8,7 @@ class World
 {
 public:
 	World();
-	void Update(float dt) const;
+	void Update(float dt, bool in_game) const;
 	void Draw(const std::shared_ptr<Shader>& shader) const;
 	void Init() const;
 	void Reset() const;

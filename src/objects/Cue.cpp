@@ -52,7 +52,7 @@ void Cue::HandleShot(const std::shared_ptr<Ball>& white_ball, const float dt)
 		}
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
 		power *= Config::power_coeff;
 		white_ball->Shot(-power_vector * power);

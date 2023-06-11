@@ -13,7 +13,7 @@ struct Config final
 
 	// Camera
 	inline static constexpr bool bound_camera = true;
-	inline static constexpr float fov = 1.3f;
+	inline static float fov = 1.3f;
 	inline static constexpr float near_clip = 0.001f;
 	inline static constexpr float far_clip = 1000.0f;
 	inline static constexpr float movement_speed = 2.0f;
@@ -51,9 +51,9 @@ struct Config final
 
 	// Font
 	inline static constexpr const char* const font_path = "Silvanowesterndemo-ALA2p.otf";
-	inline static constexpr unsigned default_font_size = 30;
+	inline static constexpr unsigned default_font_size = 64;
 
 	// Physics
-	inline static constexpr float power_coeff = 10.0f;
-	inline static constexpr float velocity_multiplier = 0.985f;
+	inline static float power_coeff = 10.0f;
+	inline static float velocity_multiplier = 0.985f;
 };

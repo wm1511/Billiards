@@ -94,6 +94,7 @@ void Ball::BounceOffHole(const glm::vec2 surface_normal, const float hole_radius
 void Ball::TakeFromHole()
 {
 	is_in_hole_ = false;
+	velocity_ = glm::vec3(0.0f);
 	translation_ = glm::vec3(0.0f, radius_, 0.0f);
 }
 
@@ -102,7 +103,7 @@ void Ball::SetDrawn(const bool drawn)
 	is_drawn_ = drawn;
 }
 
-void Ball::CheckHoleFall(const std::vector<glm::vec3>& holes, const float hole_radius)
+bool Ball::IsInHole(const std::vector<glm::vec3>& holes, const float hole_radius)
 {
 	for (const auto& hole : holes)
 	{
@@ -112,4 +113,6 @@ void Ball::CheckHoleFall(const std::vector<glm::vec3>& holes, const float hole_r
 			is_in_hole_ = true;
 		}
 	}
+
+	return is_in_hole_;
 }

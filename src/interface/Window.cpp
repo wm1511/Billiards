@@ -20,17 +20,6 @@ void Window::FramebufferResizeCallback(GLFWwindow* window, const int width, cons
 	app_window->height_ = height;
 }
 
-void Window::KeyPressedCallback(GLFWwindow* window, const int key, int, const int action, int)
-{
-	if (action == GLFW_PRESS)
-	{
-		if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED && key == GLFW_KEY_ESCAPE)
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		else if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL && key == GLFW_KEY_SPACE)
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	}
-}
-
 void Window::ErrorCallback(const int error, const char* description)
 {
 	throw std::exception(description, error);
@@ -63,7 +52,4 @@ void Window::Init()
 
 	glfwSetWindowUserPointer(window_, this);
 	glfwSetWindowSizeCallback(window_, FramebufferResizeCallback);
-	glfwSetKeyCallback(window_, KeyPressedCallback);
-
-	glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
