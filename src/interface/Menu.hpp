@@ -31,7 +31,7 @@ public:
 	[[nodiscard]] std::vector<Text>& GetTexts() { return texts_; }
 	[[nodiscard]] int GetSelected() const { return selected_; }
 
-	void Draw();
+	void Draw(bool not_loaded);
 	void DrawHelp();
 	void Update(int width, int height);
 	void AddText(float u, float v, const std::string& text, float scale = 1.0f, Alignment alignment = Alignment::LEFT, bool selected = false);

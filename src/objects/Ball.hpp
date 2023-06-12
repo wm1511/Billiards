@@ -11,6 +11,7 @@ public:
 	void CollideWith(const std::shared_ptr<Ball>& ball);
 	void BounceOffBound(glm::vec3 surface_normal, float bound_x, float bound_z);
 	void BounceOffHole(glm::vec2 surface_normal, float hole_radius);
+	void HandleGravity(float min_position);
 	void TakeFromHole();
 	void SetDrawn(bool drawn);
 

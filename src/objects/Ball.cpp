@@ -91,6 +91,16 @@ void Ball::BounceOffHole(const glm::vec2 surface_normal, const float hole_radius
 	translation_.y = temp;
 }
 
+void Ball::HandleGravity(const float min_position)
+{
+	if (translation_.y > min_position + radius_ + Config::min_change)
+		velocity_.y -= 0.05f;
+	else
+		velocity_.y = 0.0f;
+
+	translation_.y = glm::clamp(translation_.y, min_position + radius_, radius_);
+}
+
 void Ball::TakeFromHole()
 {
 	is_in_hole_ = false;

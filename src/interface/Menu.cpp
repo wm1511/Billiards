@@ -6,17 +6,20 @@ Menu::Menu(const int width, const int height) :
 {
 }
 
-void Menu::Draw()
+void Menu::Draw(const bool not_loaded)
 {
 	ControlState();
 
 	AddText(0.5f, 0.9f, "BILLIARDS", 2.0f, Alignment::CENTER);
-	AddText(0.5f, 0.7f, "Play game", 0.75f, Alignment::CENTER, selected_ == 0);
+	if (not_loaded)
+		AddText(0.5f, 0.7f, "Play game", 0.75f, Alignment::CENTER, selected_ == 0);
+	else
+		AddText(0.5f, 0.7f, "Resume game", 0.75f, Alignment::CENTER, selected_ == 0);
 	AddText(0.5f, 0.6f, "Show help", 0.75f, Alignment::CENTER, selected_ == 1);
 	AddText(0.5f, 0.5f, "Reset balls", 0.75f, Alignment::CENTER, selected_ == 2);
 	AddText(0.5f, 0.4f, "Strike force", 0.75f, Alignment::CENTER, selected_ == 3);
 	AddText(0.5f, 0.3f, "Ball friction", 0.75f, Alignment::CENTER, selected_ == 4);
-	AddText(0.5f, 0.2f, "Exit game", 0.75f, Alignment::CENTER, selected_ == 6);
+	AddText(0.5f, 0.2f, "Exit game", 0.75f, Alignment::CENTER, selected_ == 5);
 }
 
 void Menu::ControlState()
@@ -36,8 +39,8 @@ void Menu::ControlState()
 	last_up_state_ = up_state;
 
 	if (selected_ < 0)
-		selected_ = 6;
-	else if (selected_ > 6)
+		selected_ = 5;
+	else if (selected_ > 5)
 		selected_ = 0;
 }
 

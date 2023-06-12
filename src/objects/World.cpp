@@ -63,8 +63,7 @@ void World::HandleHolesFall(const int number) const
 		return;
 	}
 
-	if (balls_[number]->translation_.y > Table::hole_bottom_ + Ball::radius_)
-		balls_[number]->translation_.y -= 0.005f;
+	balls_[number]->HandleGravity(Table::hole_bottom_);
 
 	const auto translation_horizontal = glm::vec2(balls_[number]->translation_.x, balls_[number]->translation_.z);
 	const auto hole_horizontal = glm::vec2(balls_[number]->GetHole().x, balls_[number]->GetHole().z);

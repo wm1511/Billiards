@@ -8,8 +8,6 @@ App::App() :
 	main_shader_(std::make_shared<Shader>(Config::vertex_path, Config::fragment_path)),
 	background_shader_(std::make_shared<Shader>(Config::background_vertex_path, Config::background_fragment_path))
 {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	text_renderer_->Init();
 }
 
@@ -53,10 +51,14 @@ void App::OnUpdate()
 	}
 
 	if (in_menu_)
-		menu_->Draw();
+		menu_->Draw(world_ == nullptr);
 
-	menu_->AddText(0.0f, 0.95f, BuildString("FPS: {}", static_cast<int>(1.0f / delta_time_), 0.75f));
+	menu_->AddText(0.0f, 0.95f, BuildString("FPS: {}", static_cast<int>(1.0f / delta_time_)), 0.75f);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	text_renderer_->Render(menu_->GetTexts());
+	glDisable(GL_BLEND);
 }
 
 void App::OnResize() const
@@ -114,9 +116,25 @@ void App::HandleState()
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
-	if (selected == 1)
+	if (selected == 0)
+	{
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
+		{
+			in_menu_ = false;
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+			if (!world_)
+				Load();
+		}
+	}
+	else if (selected == 1)
 	{
 		menu_->DrawHelp();
+	}
+	else if (selected == 2)
+	{
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && world_)
+			world_->Reset();
 	}
 	else if (selected == 3)
 	{
@@ -131,34 +149,14 @@ void App::HandleState()
 	{
 		menu_->AddText(0.6f, 0.3f, BuildString(": {}", 1.0f / Config::velocity_multiplier), 0.75f);
 
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && Config::velocity_multiplier < 1.0f)
 			Config::velocity_multiplier += 0.0001f;
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 			Config::velocity_multiplier -= 0.0001f;
 	}
-
-	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
+	else if (selected == 5)
 	{
-		if (selected == 0)
-		{
-			in_menu_ = false;
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-			if (!world_)
-				Load();
-		}
-		else if (selected == 2)
-		{
-			if (world_)
-			{
-				world_->Reset();
-				in_menu_ = false;
-				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-			}
-		}
-		else if (selected == 6)
-		{
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
 			window_->SetCloseFlag();
-		}
 	}
 }
