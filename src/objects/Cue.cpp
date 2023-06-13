@@ -52,9 +52,6 @@ void Cue::HandleShot(const std::shared_ptr<Ball>& white_ball, const float dt)
 		}
 	}
 
-	if (power < Ball::radius_ + Config::min_change)
-		power_changed_ = false;
-
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
 		power *= Config::power_coeff;
